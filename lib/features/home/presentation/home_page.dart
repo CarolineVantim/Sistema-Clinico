@@ -4,8 +4,8 @@ import 'package:sistema_clinico/shared/constants/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'widgets/menu_item_card.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   final features = const [
     MenuItemCard(
@@ -56,19 +56,15 @@ class ProfilePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Container(
-                      height: 75,
-                      width: 75,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: const EdgeInsets.all(8),
-                      margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                      alignment: Alignment.center,
-                      child: SvgPicture.asset(
-                        ImageResourceEnum.logoTemaClaro.path,
-                      ),
-                    ),
+                        height: 75,
+                        width: 75,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: const EdgeInsets.all(8),
+                        margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                        alignment: Alignment.center),
                     FutureBuilder<SharedPreferences>(
                       future: SharedPreferences.getInstance(),
                       builder: (context, snapshot) {
