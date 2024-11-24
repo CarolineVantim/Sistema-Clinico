@@ -1,16 +1,18 @@
-# sistema_clinico
+# Sistema Clinico
 
 A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Pré-requisitos
 
-A few resources to get you started if this is your first Flutter project:
+Certifique-se de ter o seguinte instalado e configurado em sua máquina:
+- **Flutter SDK**: [Guia de instalação do Flutter](https://docs.flutter.dev/get-started/install)
+- **Editor de código**: Recomendado [Visual Studio Code](https://code.visualstudio.com/) ou [Android Studio](https://developer.android.com/studio)
+- **Emulador ou Dispositivo Físico**: Para testar o aplicativo.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Configurando o projeto
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. **Clone o repositório**:
+   ```bash
+   git clone https://github.com/CarolineVantim/Sistema-Clinico.git
