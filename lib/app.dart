@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // import 'features/clinicalcare/presentation/clinical_care_page.dart';
 import 'package:sistema_clinico/features/home/presentation/home_page.dart';
 import 'package:sistema_clinico/features/treatment/presentation/service_detail_page.dart';
+import 'package:sistema_clinico/features/treatment/presentation/treatment_description_page.dart';
 // import 'features/treatment/presentation/service_detail_page.dart';
 import 'package:sistema_clinico/shared/utils/theme.dart';
 
@@ -66,12 +67,7 @@ class App extends StatelessWidget {
                 description:
                     'Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. '),
             '/home': (context) => const HomePage(),
-            '/student_parents': (context) => Patients(),
-            '/test': (context) => Scaffold(
-                  appBar: AppBar(
-                    title: const Text('Sample Page'),
-                  ),
-                ),
+            '/treatment_description_page': (context) => const AddService(),
             '/patients': (context) => Patients(),
             '/appointments': (context) => Appointments(),
             '/settings_page': (context) => SettingsPage(),
