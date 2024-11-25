@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Patients extends StatefulWidget {
-  Patients({super.key});
+  const Patients({super.key});
 
   @override
   _PatientsState createState() => _PatientsState();
