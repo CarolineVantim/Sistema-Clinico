@@ -41,10 +41,6 @@ class _AppointmentsState extends State<Appointments> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Agendamentos"),
-        leading: IconButton(
-          onPressed: () => {},
-          icon: const Icon(Icons.arrow_back),
-        ),
       ),
       body: Column(
         children: [
@@ -99,7 +95,7 @@ class _AppointmentsState extends State<Appointments> {
           color: Colors.white,
         ),
         onPressed: () {
-          print("teste");
+          //TODO: Fazer chamada para a tela de novo agendamento.
         },
       ),
     );

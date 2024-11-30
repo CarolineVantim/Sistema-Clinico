@@ -52,7 +52,10 @@ class _AddServiceState extends State<AddService> {
   }
 
   Future<void> _createLesson() async {
+    //TODO: Itegrar com API
     var url = Uri.parse('https://yourapi.com/lessons');
+
+    //TODO: Substituir pelo DioProvider
     var response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -73,9 +76,9 @@ class _AddServiceState extends State<AddService> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      // Envolver o modal com Material
-      child: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(),
+      body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,

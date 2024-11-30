@@ -3,10 +3,10 @@ enum ImageResourceEnum {
   profissional('assets/images/home/psicologo.svg'),
   familia('assets/images/home/pais.svg'),
   notFound('assets/images/shared/not_found.svg'),
-  autism('images/home/autism.svg'),
-  calendar('images/home/calendar.svg'),
-  children('images/home/children.svg'),
-  source('images/home/source.svg'),
+  autism('assets/images/home/autism.svg'),
+  calendar('assets/images/home/calendar.svg'),
+  children('assets/images/home/children.svg'),
+  source('assets/images/home/source.svg'),
   base64Avatar(kBase64);
 
   final String path;
