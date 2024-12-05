@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: Routes.login, // Define a rota inicial como uma constante
+      initialRoute: Routes.home, // Define a rota inicial como uma constante
       routes: {
         Routes.login: (context) => const LoginPage(),
         Routes.home: (context) => const HomePage(),
@@ -36,6 +36,12 @@ class MyApp extends StatelessWidget {
         Routes.patients: (context) => const Patients(),
         Routes.appointments: (context) => Appointments(),
         Routes.settings: (context) => const SettingsPage(),
+        Routes.appointment: (context) => const AddService(),
+        // Routes.profile: (context) => const ProfilePage(),
+        Routes.serviceDetail: (context) => const ServiceDetailPage(
+            title: 'Título',
+            description:
+                'Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. '),
       },
     );
   }
@@ -50,4 +56,7 @@ class Routes {
   static const String patients = '/patients';
   static const String appointments = '/appointments';
   static const String settings = '/settings';
+  static const String appointment = '/appointment';
+  static const String profile = '/profile';
+  static const String serviceDetail = '/service_detail';
 }

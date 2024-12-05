@@ -41,10 +41,6 @@ class _PatientsState extends State<Patients> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Pacientes"),
-        leading: IconButton(
-          onPressed: () => {},
-          icon: const Icon(Icons.arrow_back),
-        ),
         actions: const [
           Padding(
             padding: EdgeInsets.only(right: 16.0),

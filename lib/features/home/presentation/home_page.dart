@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sistema_clinico/shared/constants/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../main.dart';
 import 'widgets/menu_item_card.dart';
 
 class HomePage extends StatelessWidget {
@@ -11,22 +12,27 @@ class HomePage extends StatelessWidget {
     MenuItemCard(
       titulo: 'NOVO ATENDIMENTO',
       resourceEnum: ImageResourceEnum.autism,
-      route: '/treatment_description_page',
+      route: Routes.appointment,
     ),
     MenuItemCard(
       titulo: 'AGENDAMENTOS',
       resourceEnum: ImageResourceEnum.calendar,
-      route: '/appointments',
+      route: Routes.appointments,
     ),
     MenuItemCard(
       titulo: 'PACIENTES',
       resourceEnum: ImageResourceEnum.children,
-      route: '/patients',
+      route: Routes.patients,
     ),
     MenuItemCard(
       titulo: 'CONFIGURAÇÕES',
       resourceEnum: ImageResourceEnum.source,
-      route: '/settings_page',
+      route: Routes.settings,
+    ),
+    MenuItemCard(
+      titulo: 'SERVICE DETAILS',
+      resourceEnum: ImageResourceEnum.logo,
+      route: Routes.serviceDetail,
     ),
   ];
 
