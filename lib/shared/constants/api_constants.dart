@@ -20,11 +20,14 @@ class ApiConstants {
   static String studentDelete = '/student/delete'; //{id}
 
   static String classUpdate = '/class/update';
-  static String classRegister = '/class/register';
+  static String classRegister = '/class_records/register';
   static String classFind = '/class/find_class';
   static String classDelete = '/class/delete'; //{id}
 
   static String professional = '/professional'; //
   static String professionalAssociate = '/associate_student/'; //
   static String professionalFindAll = '/find_all'; //
+
+  static String uploadImage = '/images/upload'; //
+  static String allImages = '/images/all_images'; //
 }

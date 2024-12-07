@@ -129,4 +129,70 @@ class ApiClient {
       {"error": "Allowed user types are professional and family"}
     ];
   }
+
+  FutureOr<Map<String, dynamic>> uploadImage(String imageBase64) async {
+    String link = (dotenv.get('API_LINK') + ApiConstants.uploadImage);
+
+    Map<String, dynamic> requestBody = {"imageBase64": imageBase64};
+
+    Response response;
+    Map<String, dynamic> retorno = {};
+    try {
+      response = await _dio.post(link, data: requestBody);
+
+      retorno = {"statusCode": response.statusCode, "data": response.data};
+    } catch (e) {
+      print(e);
+    }
+
+    return retorno;
+  }
+
+  Future<Map<String, dynamic>> registerClassRecord(
+    int professionalCrm,
+    int studentCpf,
+    List<int> imageIds,
+    String classDate,
+    String startTime,
+    String endTime,
+    String subject,
+    String status,
+    String location,
+    String discipline,
+  ) async {
+    String link = dotenv.get('API_LINK') + ApiConstants.classRegister;
+
+    Map<String, dynamic> requestBody = {
+      "professional": {"crm": professionalCrm},
+      "student": {"cpf": studentCpf},
+      "imageIds": imageIds,
+      "classDate": classDate,
+      "startTime": startTime,
+      "endTime": endTime,
+      "subject": subject,
+      "status": status,
+      "location": location,
+      "discipline": discipline,
+    };
+
+    try {
+      Response response = await Dio().post(
+        link,
+        data: requestBody,
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+        ),
+      );
+
+      return {
+        "statusCode": response.statusCode,
+        "data": response.data,
+      };
+    } catch (e) {
+      return {
+        "statusCode": 500,
+        "error": e.toString(),
+      };
+    }
+  }
 }
