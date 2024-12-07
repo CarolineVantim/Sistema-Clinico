@@ -2,28 +2,63 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistema_clinico/shared/constants/api_constants.dart';
 
 class ApiClient {
   final Dio _dio = Dio();
 
-  FutureOr<Map<String, dynamic>> authAutenticate(
+  FutureOr<Map<String, dynamic>> authAuthenticate(
       String cpfcrm, String password) async {
     String link = (dotenv.get('API_LINK') + ApiConstants.authAuthenticate);
 
     Map<String, dynamic> requestBody = {
       "username": cpfcrm,
-      "password": password
+      "password": password,
     };
 
     Response response = await _dio.post(link, data: requestBody);
 
-    Map<String, dynamic> auth = {
-      "statusCode": response.statusCode,
-      "data": response.data
-    };
+    print('Response Status Code: ${response.statusCode}');
+    print('Response Data: ${response.data}');
 
-    return auth;
+    if (response.statusCode == 200) {
+      var responseData = response.data;
+
+      if (responseData != null &&
+          responseData['username'] != null &&
+          responseData['token'] != null) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        prefs.setString('username', responseData['username']);
+        prefs.setString('token', responseData['token']);
+
+        return {
+          "statusCode": response.statusCode,
+          "data": responseData,
+        };
+      } else {
+        throw Exception(
+            'Estrutura de dados inválida ou campos ausentes na resposta da API.');
+      }
+    } else {
+      throw Exception(
+          'Falha na autenticação com código: ${response.statusCode}');
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      await prefs.remove('username');
+      await prefs.remove('token');
+
+      print("Usuário desconectado com sucesso.");
+    } catch (e) {
+      print("Erro ao fazer logout: $e");
+      throw Exception("Erro ao fazer logout.");
+    }
   }
 
   FutureOr<Map<String, dynamic>> searchStudent(String id, String token) async {
@@ -39,7 +74,7 @@ class ApiClient {
     try {
       Response dioResponse = await Dio().post(
         link,
-        data: {'id': id}, // Passando o ID no corpo da solicitação
+        data: {'id': id},
         options: Options(
           headers: {
             'accept': '*/*',

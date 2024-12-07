@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
     MenuItemCard(
       titulo: 'NOVO ATENDIMENTO',
       resourceEnum: ImageResourceEnum.autism,
-      route: Routes.appointment,
+      route: Routes.appointments,
     ),
     MenuItemCard(
       titulo: 'AGENDAMENTOS',
@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
     MenuItemCard(
       titulo: 'PACIENTES',
       resourceEnum: ImageResourceEnum.children,
-      route: Routes.patients,
+      route: Routes.students,
     ),
     MenuItemCard(
       titulo: 'CONFIGURAÇÕES',
@@ -42,7 +42,11 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              await prefs.remove('username');
+              Navigator.pushReplacementNamed(context, Routes.login);
+            },
             child: const Text('SAIR'),
           ),
         ],
@@ -76,7 +80,7 @@ class HomePage extends StatelessWidget {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           String userName =
-                              snapshot.data?.getString('userName') ?? 'Usuário';
+                              snapshot.data?.getString('username') ?? 'Usuário';
                           return Text(
                             'Olá, $userName',
                             style: Theme.of(context)

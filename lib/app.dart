@@ -4,16 +4,9 @@ import 'package:sistema_clinico/features/settings/presentation/settings_page.dar
 import 'package:sistema_clinico/features/appointments/presentation/appointments_page.dart';
 import 'package:sistema_clinico/features/patients/presentation/patients_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:pipa_dart/src/features/treatment/presentation/treatment_description_page.dart';
-// import 'package:pipa_dart/src/features/students/domain/students_model.dart';
-// import 'package:pipa_dart/src/features/students/presentation/students_page.dart';
-// import 'package:pipa_dart/src/features/login/presentation/login_page.dart';
-// import 'package:pipa_dart/src/services/api_service.dart';
-// import 'features/clinicalcare/presentation/clinical_care_page.dart';
 import 'package:sistema_clinico/features/home/presentation/home_page.dart';
 import 'package:sistema_clinico/features/treatment/presentation/service_detail_page.dart';
 import 'package:sistema_clinico/features/treatment/presentation/treatment_description_page.dart';
-// import 'features/treatment/presentation/service_detail_page.dart';
 import 'package:sistema_clinico/shared/utils/theme.dart';
 
 class App extends StatelessWidget {
@@ -34,7 +27,7 @@ class App extends StatelessWidget {
           title: 'Pipa App',
           theme: ThemeData(
             primarySwatch: Colors.blue,
-            brightness: ThemeChange.instance.isDartTheme
+            brightness: ThemeChange.instance.isDarkTheme
                 ? Brightness.dark
                 : Brightness.light,
           ),
@@ -46,31 +39,15 @@ class App extends StatelessWidget {
           supportedLocales: const [
             Locale('pt', 'BR'),
           ],
-          // home: FutureBuilder<bool>(
-          //   future: _checkLogin(),
-          //   builder: (context, snapshot) {
-          //     if (snapshot.connectionState == ConnectionState.waiting) {
-          //       return const Center(child: CircularProgressIndicator());
-          //     } else {
-          //       if (snapshot.data ?? false) {
-          //         return const HomePage();
-          //       } else {
-          //         return const LoginPage();
-          //       }
-          //     }
-          //   },
-          // ),
           routes: {
-            // '/': (_) => const ProfilePage(),
             '/': (context) => const ServiceDetailPage(
                 title: 'Título',
                 description:
                     'Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. '),
             '/home': (context) => const HomePage(),
-            '/treatment_description_page': (context) => const AddService(),
-            '/patients': (context) => Patients(),
+            '/patients': (context) => const Patients(),
             '/appointments': (context) => Appointments(),
-            '/settings_page': (context) => SettingsPage(),
+            '/settings_page': (context) => const SettingsPage(),
           },
         );
       },

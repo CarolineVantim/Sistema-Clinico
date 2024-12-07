@@ -15,7 +15,7 @@ class StudentsListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (students.isEmpty) {
-      return const NotFoundCard(text: 'Sem alunos cadastrados ainda!');
+      return const NotFoundCard(text: 'Vazio');
     }
 
     return ListView.builder(

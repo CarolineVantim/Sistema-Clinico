@@ -41,6 +41,12 @@ class StudentSimpleCard extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
+        trailing: IconButton(
+          icon: const Icon(Icons.notes),
+          onPressed: () {
+            print("teste");
+          },
+        ),
       ),
     );
   }
