@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sistema_clinico/features/appointments/presentation/new_appointment/new_appointment.dart';
 
 class Appointments extends StatefulWidget {
   Appointments({super.key});
@@ -95,7 +96,10 @@ class _AppointmentsState extends State<Appointments> {
           color: Colors.white,
         ),
         onPressed: () {
-          //TODO: Fazer chamada para a tela de novo agendamento.
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NewAppointmentScreen()),
+          );
         },
       ),
     );
