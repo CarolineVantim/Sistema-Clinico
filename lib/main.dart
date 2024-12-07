@@ -9,25 +9,32 @@ import 'package:sistema_clinico/features/patients/presentation/patients_page.dar
 import 'package:sistema_clinico/features/settings/presentation/settings_page.dart';
 import 'package:sistema_clinico/features/home/presentation/home_page.dart';
 import 'package:sistema_clinico/features/treatment/presentation/treatment_description_page.dart';
+import 'package:sistema_clinico/shared/utils/theme.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Garante a inicialização correta
-  await dotenv.load(); // Carrega o arquivo .env
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Pegando o tema atual do provider
+    final theme = ref.watch(themeProvider);
+
+    // Definindo o tema com base no estado atual
+    final currentTheme = theme == AppTheme.dark
+        ? ThemeData.dark().copyWith(primarySwatch: Colors.blue)
+        : ThemeData.light().copyWith(primarySwatch: Colors.blue);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Sistema Clínico',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      initialRoute: Routes.home, // Define a rota inicial como uma constante
+      theme: currentTheme,
+      initialRoute: Routes.login,
       routes: {
         Routes.login: (context) => const LoginPage(),
         Routes.home: (context) => const HomePage(),
@@ -36,8 +43,6 @@ class MyApp extends StatelessWidget {
         Routes.patients: (context) => const Patients(),
         Routes.appointments: (context) => Appointments(),
         Routes.settings: (context) => const SettingsPage(),
-        Routes.appointment: (context) => const AddService(),
-        // Routes.profile: (context) => const ProfilePage(),
         Routes.serviceDetail: (context) => const ServiceDetailPage(
             title: 'Título',
             description:
@@ -47,7 +52,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Classe para gerenciar rotas nomeadas
 class Routes {
   static const String login = '/login';
   static const String home = '/home';
@@ -56,7 +60,5 @@ class Routes {
   static const String patients = '/patients';
   static const String appointments = '/appointments';
   static const String settings = '/settings';
-  static const String appointment = '/appointment';
-  static const String profile = '/profile';
   static const String serviceDetail = '/service_detail';
 }

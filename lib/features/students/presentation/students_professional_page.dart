@@ -22,7 +22,7 @@ class _StudentsPageProfessionalState
     var students = ref.watch(studentsprofessionalProvider(searchText));
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Estudante'),
+        title: const Text('Pacientes'),
       ),
       body: Column(
         children: [

@@ -43,17 +43,6 @@ class _PatientsState extends State<Patients> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Pacientes"),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16.0),
-            child: CircleAvatar(
-              child: Text(
-                "M",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
-        ],
       ),
       body: Column(
         children: [

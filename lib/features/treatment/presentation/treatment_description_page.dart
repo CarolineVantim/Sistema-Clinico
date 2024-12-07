@@ -100,7 +100,7 @@ class _AddServiceState extends State<AddService> {
               const SizedBox(height: 20),
               DropdownButtonFormField<String>(
                 value: _selectedMateria,
-                hint: const Text("Selecionar Matéria"),
+                hint: const Text("Selecionar função"),
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedMateria = newValue;
