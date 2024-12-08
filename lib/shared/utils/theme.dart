@@ -16,14 +16,14 @@ class ThemeChange with ChangeNotifier {
   }
 }
 
-final lightTheme = ThemeData(
-  primarySwatch: Colors.blue,
-  brightness: Brightness.light,
-  appBarTheme: const AppBarTheme(color: Colors.blue),
-);
+// final lightTheme = ThemeData(
+//   primarySwatch: Colors.blue,
+//   brightness: Brightness.light,
+//   appBarTheme: const AppBarTheme(color: Colors.blue),
+// );
 
-final darkTheme = ThemeData(
-  primarySwatch: Colors.blue,
-  brightness: Brightness.dark,
-  appBarTheme: const AppBarTheme(color: Colors.blueGrey),
-);
+// final darkTheme = ThemeData(
+//   primarySwatch: Colors.blue,
+//   brightness: Brightness.dark,
+//   appBarTheme: const AppBarTheme(color: Colors.blueGrey),
+// );

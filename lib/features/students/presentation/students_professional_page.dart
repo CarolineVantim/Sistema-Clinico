@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistema_clinico/shared/widgets/search_bar.dart' as custom;
 import 'package:sistema_clinico/shared/widgets/loading_widgets.dart';
-import '../data/repositories/students_professional_repository_impl.dart';
+import 'package:sistema_clinico/features/students/data/repositories/students_professional_repository_impl.dart';
 import 'widgets/students_professional_list_widget.dart';
 
 class StudentsPageProfessional extends ConsumerStatefulWidget {
@@ -19,7 +19,7 @@ class _StudentsPageProfessionalState
 
   @override
   Widget build(BuildContext context) {
-    var students = ref.watch(studentsprofessionalProvider(searchText));
+    final students = ref.watch(studentsprofessionalProvider(searchText));
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pacientes'),
@@ -44,8 +44,10 @@ class _StudentsPageProfessionalState
           ),
           Expanded(
             child: students.when(
-              data: (data) => StudentsProfessionalListWidget(students: data),
-              error: (error, stackTrace) => Text(stackTrace.toString()),
+              data: (data) {
+                return StudentsProfessionalListWidget(students: data);
+              },
+              error: (error, stackTrace) => Text('Erro: $error'),
               loading: () => const LoadingWidget(),
             ),
           ),

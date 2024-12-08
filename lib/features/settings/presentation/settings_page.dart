@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
+import 'package:sistema_clinico/app.dart';
 import 'package:sistema_clinico/shared/utils/theme.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final themeChange = Provider.of<ThemeChange>(context);
+  _SettingsPageState createState() => _SettingsPageState();
+}
 
+class _SettingsPageState extends ConsumerState<SettingsPage> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Configurações'),
@@ -24,9 +29,9 @@ class SettingsPage extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             Switch(
-              value: themeChange.isDarkTheme,
+              value: ref.watch(isDarkTheme),
               onChanged: (value) {
-                themeChange.changeTheme();
+                ref.read(isDarkTheme.notifier).update((state) => !value);
               },
             ),
           ],

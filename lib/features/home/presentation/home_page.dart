@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
     MenuItemCard(
       titulo: 'NOVO ATENDIMENTO',
       resourceEnum: ImageResourceEnum.autism,
-      route: Routes.appointments,
+      route: Routes.treatmentDescription,
     ),
     MenuItemCard(
       titulo: 'AGENDAMENTOS',
@@ -28,11 +28,6 @@ class HomePage extends StatelessWidget {
       titulo: 'CONFIGURAÇÕES',
       resourceEnum: ImageResourceEnum.source,
       route: Routes.settings,
-    ),
-    MenuItemCard(
-      titulo: 'SERVICE DETAILS',
-      resourceEnum: ImageResourceEnum.logo,
-      route: Routes.serviceDetail,
     ),
   ];
 
@@ -146,11 +141,6 @@ class HomePage extends StatelessWidget {
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        label: const Text('SAIR'),
-        icon: const Icon(Icons.logout),
-      ),
     );
   }
 }
