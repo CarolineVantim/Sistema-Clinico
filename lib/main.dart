@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: Routes.home, // Define a rota inicial como uma constante
+      initialRoute: Routes.login, // Define a rota inicial como uma constante
       routes: {
         Routes.login: (context) => const LoginPage(),
         Routes.home: (context) => const HomePage(),

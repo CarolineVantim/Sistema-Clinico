@@ -6,7 +6,7 @@ class ApiConstants {
   static String usersFindBy = '/users/find_by';
   static String usersDelete = '/users/delete/'; //{id}
 
-  static String authAuthenticate = '/api/auth/authenticate';
+  static String authAuthenticate = '/auth/authenticate';
   static String authRegister = '/auth/register';
 
   static String studentUpdate = '/student/update';

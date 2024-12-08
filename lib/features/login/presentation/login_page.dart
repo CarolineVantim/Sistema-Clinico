@@ -27,12 +27,15 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushReplacementNamed(context, '/home');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login failed: ${response['data']}')),
+          SnackBar(
+              content:
+                  Text('Não foi possível fazer login. Credenciais incorretas')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Login failed: $e')),
+        SnackBar(
+            content: Text('Não foi possível fazer login. Tente novamente')),
       );
     } finally {
       setState(() {
