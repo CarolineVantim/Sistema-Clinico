@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'patients_profile.dart';
-
+import '../../students/presentation/patients_profile.dart';
 
 class Patients extends StatefulWidget {
   const Patients({super.key});
@@ -84,22 +83,22 @@ class _PatientsState extends State<Patients> {
                           color: Colors.blue,
                         ),
                       ),
-                      title: Text(patient['name']!),
-                      subtitle: Text(patient['age']!),
-                     trailing: IconButton(
-                      icon: const Icon(Icons.notes),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PatientsProfile(
-                              name: patient['name']!,
-                              avatar: patient['avatar'],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                      // title: Text(patient['name']!),
+                      // subtitle: Text(patient['age']!),
+                      // trailing: IconButton(
+                      //   icon: const Icon(Icons.notes),
+                      //   onPressed: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => PatientsProfile(
+                      //           name: patient['name']!,
+                      //           avatar: patient['avatar'],
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
                     ),
                   ),
                 );

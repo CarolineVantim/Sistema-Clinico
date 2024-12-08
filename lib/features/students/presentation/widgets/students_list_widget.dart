@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sistema_clinico/shared/data/models/student.dart';
 import 'package:sistema_clinico/shared/widgets/not_found_widget.dart';
 import '../../domain/students_model.dart';
 import 'student_simple_card.dart';
@@ -10,7 +11,7 @@ class StudentsListWidget extends StatelessWidget {
     required this.students,
   });
 
-  final List<StudentModel> students;
+  final List<Student> students;
 
   @override
   Widget build(BuildContext context) {

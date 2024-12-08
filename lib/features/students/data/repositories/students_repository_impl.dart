@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistema_clinico/features/students/domain/students_model.dart';
+import 'package:sistema_clinico/shared/data/models/student.dart';
 import 'package:sistema_clinico/shared/data/providers/dio_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,7 +17,7 @@ class StudentsRepositoryImpl implements StudentsRepository {
   StudentsRepositoryImpl({required this.dio});
 
   @override
-  Future<List<StudentModel>> getAllStudents() async {
+  Future<List<Student>> getAllStudents() async {
     try {
       final response = await dio.get('/api/student/view_all');
 
@@ -27,7 +28,7 @@ class StudentsRepositoryImpl implements StudentsRepository {
       }
 
       // Conversão para lista de StudentModel
-      return [for (final s in response.data as List) StudentModel.fromJson(s)];
+      return [for (final s in response.data as List) Student.fromJson(s)];
     } on DioException catch (e) {
       // Log detalhado do erro
       log('Falha ao consultar alunos. Mensagem: ${e.message}, Erro: ${e.error}');
@@ -56,10 +57,10 @@ StudentsRepository studentsRepository(Ref ref) {
 
 // Provider assíncrono para buscar os estudantes
 @riverpod
-Future<List<StudentModel>> students(Ref ref) async {
+Future<List<Student>> students(Ref ref) async {
   try {
     // Recupera a lista de estudantes usando o repositório
-    List<StudentModel> students =
+    List<Student> students =
         await ref.watch(studentsRepositoryProvider).getAllStudents();
     return students;
   } catch (e) {

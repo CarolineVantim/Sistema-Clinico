@@ -25,11 +25,11 @@ final studentsRepositoryProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef StudentsRepositoryRef = AutoDisposeProviderRef<StudentsRepository>;
-String _$studentsHash() => r'f0e7e04470da3dc274d787ed8dd0fe5389f54702';
+String _$studentsHash() => r'310cd04b46c113202f02b78f1725d9712548e76c';
 
 /// See also [students].
 @ProviderFor(students)
-final studentsProvider = AutoDisposeFutureProvider<List<StudentModel>>.internal(
+final studentsProvider = AutoDisposeFutureProvider<List<Student>>.internal(
   students,
   name: r'studentsProvider',
   debugGetCreateSourceHash:
@@ -40,6 +40,6 @@ final studentsProvider = AutoDisposeFutureProvider<List<StudentModel>>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef StudentsRef = AutoDisposeFutureProviderRef<List<StudentModel>>;
+typedef StudentsRef = AutoDisposeFutureProviderRef<List<Student>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
