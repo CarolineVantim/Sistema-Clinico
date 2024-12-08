@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
     final password = _passwordController.text;
 
     try {
-      final response = await ApiClient().authAutenticate(username, password);
+      final response = await ApiClient().authAuthenticate(username, password);
       if (response['statusCode'] == 200) {
         Navigator.pushReplacementNamed(context, '/home');
       } else {

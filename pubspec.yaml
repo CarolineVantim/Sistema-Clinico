@@ -53,6 +53,7 @@ dependencies:
   chewie: ^1.8.1
   flutter_html: ^3.0.0-beta.2
   path_provider: ^2.1.5
+  freezed: ^2.5.7
 #  fijkplayer: ^0.11.0
 
 dev_dependencies:

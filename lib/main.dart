@@ -11,7 +11,7 @@ import 'package:sistema_clinico/features/home/presentation/home_page.dart';
 import 'package:sistema_clinico/features/treatment/presentation/treatment_description_page.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Garante a inicialização correta
+  WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(); // Carrega o arquivo .env
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -36,7 +36,6 @@ class MyApp extends StatelessWidget {
         Routes.patients: (context) => const Patients(),
         Routes.appointments: (context) => Appointments(),
         Routes.settings: (context) => const SettingsPage(),
-        Routes.appointment: (context) => const AddService(),
         // Routes.profile: (context) => const ProfilePage(),
         Routes.serviceDetail: (context) => const ServiceDetailPage(
             title: 'Título',

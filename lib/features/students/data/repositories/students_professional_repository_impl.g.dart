@@ -7,7 +7,7 @@ part of 'students_professional_repository_impl.dart';
 // **************************************************************************
 
 String _$studentsprofessionalRepositoryHash() =>
-    r'3c7f9ff2a83a5a1e3ef261f2a445a49c3ab9a684';
+    r'69ce2d62590b09a7c97fe5da8b7d8f9aa7950cc2';
 
 /// See also [studentsprofessionalRepository].
 @ProviderFor(studentsprofessionalRepository)
@@ -27,7 +27,7 @@ final studentsprofessionalRepositoryProvider =
 typedef StudentsprofessionalRepositoryRef
     = AutoDisposeProviderRef<StudentsRepository>;
 String _$studentsprofessionalHash() =>
-    r'b0fa75368d6138efce2e9dd5b70b8823fe215820';
+    r'6b11113decc879fcd64b60587ae3cd47038b8df6';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -55,8 +55,7 @@ class _SystemHash {
 const studentsprofessionalProvider = StudentsprofessionalFamily();
 
 /// See also [studentsprofessional].
-class StudentsprofessionalFamily
-    extends Family<AsyncValue<List<StudentModel>>> {
+class StudentsprofessionalFamily extends Family<AsyncValue<List<Student>>> {
   /// See also [studentsprofessional].
   const StudentsprofessionalFamily();
 
@@ -95,7 +94,7 @@ class StudentsprofessionalFamily
 
 /// See also [studentsprofessional].
 class StudentsprofessionalProvider
-    extends AutoDisposeFutureProvider<List<StudentModel>> {
+    extends AutoDisposeFutureProvider<List<Student>> {
   /// See also [studentsprofessional].
   StudentsprofessionalProvider(
     String nome,
@@ -130,8 +129,7 @@ class StudentsprofessionalProvider
 
   @override
   Override overrideWith(
-    FutureOr<List<StudentModel>> Function(StudentsprofessionalRef provider)
-        create,
+    FutureOr<List<Student>> Function(StudentsprofessionalRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -148,7 +146,7 @@ class StudentsprofessionalProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<StudentModel>> createElement() {
+  AutoDisposeFutureProviderElement<List<Student>> createElement() {
     return _StudentsprofessionalProviderElement(this);
   }
 
@@ -168,14 +166,13 @@ class StudentsprofessionalProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin StudentsprofessionalRef
-    on AutoDisposeFutureProviderRef<List<StudentModel>> {
+mixin StudentsprofessionalRef on AutoDisposeFutureProviderRef<List<Student>> {
   /// The parameter `nome` of this provider.
   String get nome;
 }
 
 class _StudentsprofessionalProviderElement
-    extends AutoDisposeFutureProviderElement<List<StudentModel>>
+    extends AutoDisposeFutureProviderElement<List<Student>>
     with StudentsprofessionalRef {
   _StudentsprofessionalProviderElement(super.provider);
 

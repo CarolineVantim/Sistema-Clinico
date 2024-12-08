@@ -7,7 +7,7 @@ part of 'clinical_care_repository_date_position_impl.dart';
 // **************************************************************************
 
 String _$clinicalcaredatepositionRepositoryHash() =>
-    r'e6e5a746208d5b21fdd6e855d12c6785e79c5c38';
+    r'76f95e80ce447a14a1618c45b2e4117403845d07';
 
 /// See also [clinicalcaredatepositionRepository].
 @ProviderFor(clinicalcaredatepositionRepository)
@@ -27,7 +27,7 @@ final clinicalcaredatepositionRepositoryProvider =
 typedef ClinicalcaredatepositionRepositoryRef
     = AutoDisposeProviderRef<ClinicalCareDatePositionRepository>;
 String _$clinicalCareByDatePositionHash() =>
-    r'17dcbfe550dd8f55f00f837d07e9402f673d68a3';
+    r'19c17e9ba3302cd6eec8bc7aa159b02ec533b191';
 
 /// Copied from Dart SDK
 class _SystemHash {
