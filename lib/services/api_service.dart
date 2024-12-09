@@ -195,4 +195,51 @@ class ApiClient {
       };
     }
   }
+
+  Future<Map<String, dynamic>> viewAllP() async {
+    String link = dotenv.get('API_LINK') + ApiConstants.studentViewAll;
+
+    try {
+      Response response = await Dio().get(
+        link,
+        // data: requestBody,
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+        ),
+      );
+
+      return {
+        "statusCode": response.statusCode,
+        "data": response.data,
+      };
+    } catch (e) {
+      return {
+        "statusCode": 500,
+        "error": e.toString(),
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> viewAllClass() async {
+    String link = dotenv.get('API_LINK') + ApiConstants.classResumeFind;
+
+    try {
+      Response response = await Dio().get(
+        link,
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+        ),
+      );
+
+      return {
+        "statusCode": response.statusCode,
+        "data": response.data,
+      };
+    } catch (e) {
+      return {
+        "statusCode": 500,
+        "error": e.toString(),
+      };
+    }
+  }
 }
