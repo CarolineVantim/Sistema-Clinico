@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistema_clinico/features/appointments/presentation/appointments_page.dart';
 import 'package:sistema_clinico/features/login/presentation/login_page.dart';
 import 'package:sistema_clinico/features/students/presentation/students_page.dart';
@@ -13,6 +14,10 @@ import 'package:sistema_clinico/features/treatment/presentation/treatment_descri
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Garante a inicialização correta
   await dotenv.load(); // Carrega o arquivo .env
+  final Future<SharedPreferencesWithCache> _prefs =
+      SharedPreferencesWithCache.create(
+          cacheOptions: const SharedPreferencesWithCacheOptions(
+              allowList: <String>{'counter'}));
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -30,7 +35,7 @@ class MyApp extends StatelessWidget {
       initialRoute: Routes.login, // Define a rota inicial como uma constante
       routes: {
         Routes.login: (context) => const LoginPage(),
-        Routes.home: (context) => const HomePage(),
+        Routes.home: (context) => HomePage(),
         Routes.students: (context) => const StudentsPage(),
         Routes.treatmentDescription: (context) => const AddService(),
         Routes.patients: (context) => const Patients(),

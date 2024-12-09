@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistema_clinico/services/api_service.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _isLoading = true;
     });
+    final prefs = await SharedPreferences.getInstance();
 
     final username = _usernameController.text;
     final password = _passwordController.text;
@@ -24,6 +26,8 @@ class _LoginPageState extends State<LoginPage> {
     try {
       final response = await ApiClient().authAutenticate(username, password);
       if (response['statusCode'] == 200) {
+        prefs.setString("username", response["data"]["username"]);
+        print(response["data"]["username"]);
         Navigator.pushReplacementNamed(context, '/home');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

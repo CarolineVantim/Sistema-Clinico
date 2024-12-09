@@ -22,6 +22,8 @@ class ApiConstants {
   static String classUpdate = '/class/update';
   static String classRegister = '/class_records/register';
   static String classFind = '/class/find_class';
+  static String classResumeFind = '/class_records/find_resume_class';
+
   static String classDelete = '/class/delete'; //{id}
 
   static String professional = '/professional'; //
