@@ -15,7 +15,7 @@ class StudentsPage extends ConsumerWidget {
     var students = ref.watch(studentsProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Estudante'),
+        title: const Text('Pacientes'),
       ),
       body: students.when(
         data: (data) => StudentsListWidget(students: data),
