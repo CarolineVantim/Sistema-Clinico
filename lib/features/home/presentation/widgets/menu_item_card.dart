@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:sistema_clinico/shared/constants/constants.dart';
+import 'package:sistema_clinico/shared/constants/coLORS.dart';
 
 class MenuItemCard extends StatelessWidget {
   const MenuItemCard({
@@ -23,6 +24,7 @@ class MenuItemCard extends StatelessWidget {
       },
       child: Card(
         clipBehavior: Clip.antiAlias,
+        color: tCardBgColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,

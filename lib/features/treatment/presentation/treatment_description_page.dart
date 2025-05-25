@@ -1,189 +1,256 @@
-import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
+import 'package:sistema_clinico/shared/constants/colors.dart';
 
 class AddService extends StatefulWidget {
   const AddService({super.key});
 
   @override
-  _AddServiceState createState() => _AddServiceState();
+  State<AddService> createState() => _AddServiceState();
 }
 
 class _AddServiceState extends State<AddService> {
-  List<String> materias = [
-    'Fonoaudiólogo(a)',
-    'Nutricionista',
-    'Psicólogo(a)',
-    'Assistente Sociai',
-    'Fisioterapeuta',
-  ];
-  String? _selectedMateria;
-  DateTime? _selectedDate;
-  TimeOfDay? _selectedTime;
+  final TextEditingController _clientController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _professionalController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-  Future<void> _pickDateTime(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
+  // Dados estáticos
+  List<String> professions = [
+    'Psicólogo',
+    'Fonoaudiólogo',
+    'Terapeuta Ocupacional',
+    'Psicopedagogo'
+  ];
+  String? selectedProfession;
+  DateTime? selectedDate;
+
+  // Anexos
+  List<XFile> attachments = [];
+  final ImagePicker _picker = ImagePicker();
+
+  // 📅 Selecionar data
+  Future<void> _selectDate() async {
+    final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
+      initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
+      lastDate: DateTime(2100),
     );
-    if (pickedDate != null) {
-      final TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: _selectedTime ?? TimeOfDay.now(),
-      );
-      if (pickedTime != null) {
-        setState(() {
-          _selectedDate = DateTime(
-            pickedDate.year,
-            pickedDate.month,
-            pickedDate.day,
-            pickedTime.hour,
-            pickedTime.minute,
-          );
-          _selectedTime = pickedTime;
-        });
-      }
+    if (picked != null) {
+      setState(() {
+        selectedDate = picked;
+      });
     }
   }
 
-  Future<void> _createLesson() async {
-    //TODO: Itegrar com API
-    var url = Uri.parse('https://yourapi.com/lessons');
+  // 🖼️ Anexar imagem
+  Future<void> pickMedia() async {
+    final List<XFile>? picked = await _picker.pickMultiImage();
 
-    //TODO: Substituir pelo DioProvider
-    var response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'title': _titleController.text,
-        'description': _descriptionController.text,
-        'materia': _selectedMateria,
-        'date': _selectedDate?.toIso8601String(),
-      }),
-    );
-    if (response.statusCode == 200) {
-      Navigator.pop(context);
-    } else {
-      // Handle error
-      print('Failed to create lesson: ${response.body}');
+    if (picked != null) {
+      setState(() {
+        attachments.addAll(picked);
+      });
     }
+  }
+
+  // 🚀 Simular envio
+  void submitForm() {
+    if (_clientController.text.isEmpty ||
+        selectedDate == null ||
+        _titleController.text.isEmpty ||
+        selectedProfession == null ||
+        _professionalController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Preencha todos os campos obrigatórios')),
+      );
+      return;
+    }
+
+    // Apenas simula sucesso
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Atendimento criado com sucesso (Offline)')),
+    );
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    final dateFormatted = selectedDate != null
+        ? DateFormat('dd/MM/yyyy').format(selectedDate!)
+        : 'DD/MM/YYYY';
+
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: tCardBgColor,
+        title: const Text('NOVO ATENDIMENTO'),
+      ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-            left: 20,
-            right: 20,
-            top: 20,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const Text(
-                "Adicionar Atendimento",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                ),
-              ),
-              const SizedBox(height: 20),
-              DropdownButtonFormField<String>(
-                value: _selectedMateria,
-                hint: const Text("Selecionar Matéria"),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedMateria = newValue;
-                  });
-                },
-                items: materias.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () => _pickDateTime(context),
-                child: Text(_selectedDate == null
-                    ? 'Escolher Data e Hora'
-                    : '${DateFormat('dd/MM/yyyy').format(_selectedDate!)} ${_selectedTime!.format(context)}'),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: "Título",
-                  hintText: "Informe o título do atendimento",
-                  border: OutlineInputBorder(),
-                  labelStyle: TextStyle(color: Colors.blue),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: "Descrição",
-                  hintText: "Conte um pouco sobre o atendimento",
-                  border: OutlineInputBorder(),
-                  labelStyle: TextStyle(color: Colors.blue),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                ),
-                minLines: 3,
-                maxLines: 5,
-                keyboardType: TextInputType.multiline,
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: _createLesson,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.blue,
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 50),
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: TextFormField(
+                    controller: _clientController,
+                    decoration: const InputDecoration(
+                      labelText: 'Cliente',
+                      suffixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
                     ),
-                    child: const Text("Criar"),
                   ),
-                  OutlinedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.blue),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  flex: 1,
+                  child: InkWell(
+                    onTap: _selectDate,
+                    child: InputDecorator(
+                      decoration: const InputDecoration(
+                        labelText: 'Data',
+                        border: OutlineInputBorder(),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(dateFormatted),
+                          const Icon(Icons.calendar_today),
+                        ],
                       ),
                     ),
-                    child: const Text("Cancelar"),
                   ),
-                ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+            TextFormField(
+              controller: _titleController,
+              decoration: const InputDecoration(
+                labelText: 'Título',
+                hintText: 'Título do atendimento',
+                border: OutlineInputBorder(),
               ),
-              const SizedBox(height: 20),
-            ],
-          ),
+            ),
+            const SizedBox(height: 30),
+            DropdownButtonFormField<String>(
+              value: selectedProfession,
+              decoration: const InputDecoration(
+                labelText: 'Profissão',
+                border: OutlineInputBorder(),
+              ),
+              items: professions
+                  .map(
+                    (e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(e),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                setState(() {
+                  selectedProfession = value;
+                });
+              },
+            ),
+            const SizedBox(height: 30),
+            TextFormField(
+              controller: _professionalController,
+              decoration: const InputDecoration(
+                labelText: 'Profissional',
+                hintText: 'Nome do profissional',
+                suffixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 30),
+            TextFormField(
+              controller: _descriptionController,
+              minLines: 3,
+              maxLines: 5,
+              decoration: const InputDecoration(
+                labelText: 'Observação',
+                hintText: 'Descrição completa do atendimento',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton.icon(
+              onPressed: pickMedia,
+              icon: const Icon(Icons.attach_file),
+              label: const Text('Anexar Imagem'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueGrey.shade100,
+                foregroundColor: Colors.black,
+              ),
+            ),
+            if (attachments.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Wrap(
+                  spacing: 8,
+                  children: attachments
+                      .map(
+                        (file) => Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Image.file(
+                              File(file.path),
+                              width: 80,
+                              height: 80,
+                              fit: BoxFit.cover,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  attachments.remove(file);
+                                });
+                              },
+                              child: const CircleAvatar(
+                                radius: 10,
+                                backgroundColor: Colors.red,
+                                child: Icon(Icons.close, size: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              onPressed: submitForm,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue.shade300,
+                minimumSize: const Size(120, 40),
+              ),
+              child: const Text('Salvar'),
+            ),
+            OutlinedButton(
+              onPressed: () => Navigator.pop(context),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.red,
+                side: const BorderSide(color: Colors.red),
+                minimumSize: const Size(120, 40),
+              ),
+              child: const Text('Cancelar'),
+            ),
+          ],
         ),
       ),
     );

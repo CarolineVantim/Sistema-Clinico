@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sistema_clinico/shared/widgets/not_found_widget.dart';
 import '../../domain/students_model.dart';
 import 'student_professional_simple_card.dart';

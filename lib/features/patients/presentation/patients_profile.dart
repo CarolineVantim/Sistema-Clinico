@@ -35,9 +35,9 @@ class PatientsProfile extends StatelessWidget {
             Row(
               children: [
                 CircleAvatar(
-                  radius: 60, // Aumenta o tamanho do avatar
+                  radius: 60,
+                  backgroundColor: Colors.blue, // Aumenta o tamanho do avatar
                   child: Icon(avatar, size: 60, color: Colors.white),
-                  backgroundColor: Colors.blue,
                 ),
                 const SizedBox(width: 16),
                 Expanded(

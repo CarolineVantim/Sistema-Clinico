@@ -106,11 +106,11 @@ class _AppointmentsState extends State<Appointments> {
                           ),
                           child: ListTile(
                             leading: CircleAvatar(
+                              backgroundColor: Colors.blue,
                               child: Text(
                                 appointment['discipline'][0],
                                 style: const TextStyle(color: Colors.white),
                               ),
-                              backgroundColor: Colors.blue,
                             ),
                             title: Text(appointment['professionalName']),
                             subtitle: Column(

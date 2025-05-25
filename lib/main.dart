@@ -14,7 +14,7 @@ import 'package:sistema_clinico/features/treatment/presentation/treatment_descri
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Garante a inicialização correta
   await dotenv.load(); // Carrega o arquivo .env
-  final Future<SharedPreferencesWithCache> _prefs =
+  final Future<SharedPreferencesWithCache> prefs =
       SharedPreferencesWithCache.create(
           cacheOptions: const SharedPreferencesWithCacheOptions(
               allowList: <String>{'counter'}));
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: Routes.login, // Define a rota inicial como uma constante
+      initialRoute: Routes.home, // Define a rota inicial como uma constante
       routes: {
         Routes.login: (context) => const LoginPage(),
         Routes.home: (context) => HomePage(),

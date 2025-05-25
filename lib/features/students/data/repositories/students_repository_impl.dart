@@ -46,11 +46,6 @@ class StudentsRepositoryImpl implements StudentsRepository {
 StudentsRepository studentsRepository(Ref ref) {
   var dio = ref.watch(dioProvider);
 
-  // Verificação de null ou erro durante a injeção de dependência
-  if (dio == null) {
-    throw Exception('Erro ao inicializar o DioProvider.');
-  }
-
   return StudentsRepositoryImpl(dio: dio);
 }
 
