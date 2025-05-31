@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:sistema_clinico/shared/constants/constants.dart';
-import 'package:sistema_clinico/shared/constants/coLORS.dart';
+import 'package:sistema_clinico/shared/constants/colors.dart';
 
 class MenuItemCard extends StatelessWidget {
   const MenuItemCard({
