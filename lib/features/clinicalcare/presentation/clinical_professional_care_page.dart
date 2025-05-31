@@ -55,7 +55,7 @@ class _ClinicalCarePageState extends ConsumerState<ClinicalCarePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Estudantes'),
+        title: const Text('CLIENTES'),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),

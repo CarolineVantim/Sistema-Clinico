@@ -17,17 +17,17 @@ class _HomePageState extends State<HomePage> {
 
   final features = const [
     MenuItemCard(
-      titulo: 'NOVO ATENDIMENTO',
+      titulo: 'ATENDIMENTO',
       resourceEnum: ImageResourceEnum.autism,
       route: Routes.appointment,
     ),
     MenuItemCard(
-      titulo: 'AGENDAMENTOS',
+      titulo: 'AGENDA',
       resourceEnum: ImageResourceEnum.calendar,
       route: Routes.appointments,
     ),
     MenuItemCard(
-      titulo: 'PACIENTES',
+      titulo: 'CLIENTES',
       resourceEnum: ImageResourceEnum.children,
       route: Routes.patients,
     ),
