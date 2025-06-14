@@ -8,7 +8,6 @@ import 'package:sistema_clinico/features/treatment/presentation/treatment_descri
 import 'package:sistema_clinico/shared/data/models/student.dart';
 
 import 'package:sistema_clinico/shared/widgets/loading_widgets.dart';
-import '../../students/domain/students_model.dart';
 import 'students_attendance_list_widget.dart';
 import '../presentation/widgets/floating_add_button.dart';
 import 'widgets/filterDateDropdown.dart';

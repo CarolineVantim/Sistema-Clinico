@@ -1,0 +1,2 @@
+/Users/esdras/repositorio/fatec/dsm/lddm/Sistema-Clinico/android/app/.cxx/Debug/22m153j6/x86/CMakeFiles/edit_cache.dir
+/Users/esdras/repositorio/fatec/dsm/lddm/Sistema-Clinico/android/app/.cxx/Debug/22m153j6/x86/CMakeFiles/rebuild_cache.dir

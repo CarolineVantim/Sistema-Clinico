@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistema_clinico/features/treatment/presentation/service_detail_page.dart';
-import 'package:sistema_clinico/shared/data/models/class_records_model.dart';
 import 'package:sistema_clinico/features/students/data/repositories/class_records_repository_impl.dart';
 
 class PatientsProfile extends ConsumerWidget {
@@ -34,7 +33,8 @@ class PatientsProfile extends ConsumerWidget {
                       studentImage != null && studentImage!.isNotEmpty
                           ? MemoryImage(base64Decode(
                               studentImage!)) // Tratando a imagem em base64
-                          : null, // Caso não tenha imagem, não exibe nada
+                          : null,
+                  backgroundColor: Colors.blue, // Caso não tenha imagem, não exibe nada
                   child: studentImage == null || studentImage!.isEmpty
                       ? Icon(
                           Icons.person, // Ícone padrão se não houver imagem
@@ -42,7 +42,6 @@ class PatientsProfile extends ConsumerWidget {
                           color: Colors.white,
                         )
                       : null,
-                  backgroundColor: Colors.blue,
                 ),
                 const SizedBox(width: 16),
                 Expanded(

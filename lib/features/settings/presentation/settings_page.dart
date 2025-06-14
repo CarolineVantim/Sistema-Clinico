@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
 import 'package:sistema_clinico/app.dart';
-import 'package:sistema_clinico/shared/utils/theme.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});

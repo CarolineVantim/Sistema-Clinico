@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistema_clinico/features/students/domain/students_model.dart';
 import 'package:sistema_clinico/shared/data/models/student.dart';
 import 'package:sistema_clinico/shared/data/providers/dio_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -46,11 +45,6 @@ class StudentsRepositoryImpl implements StudentsRepository {
 @riverpod
 StudentsRepository studentsRepository(Ref ref) {
   var dio = ref.watch(dioProvider);
-
-  // Verificação de null ou erro durante a injeção de dependência
-  if (dio == null) {
-    throw Exception('Erro ao inicializar o DioProvider.');
-  }
 
   return StudentsRepositoryImpl(dio: dio);
 }

@@ -1,9 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:sistema_clinico/shared/constants/constants.dart';
-import 'package:sistema_clinico/features/students/domain/students_model.dart';
-import 'package:sistema_clinico/features/students/presentation/patients_profile.dart';
 import 'package:sistema_clinico/shared/data/models/student.dart';
 
 import '../../../clinicalcare/presentation/clinical_care_page.dart';

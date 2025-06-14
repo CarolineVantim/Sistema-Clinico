@@ -54,7 +54,7 @@ class Student {
 
   // Cria uma string de parâmetros para requisições, por exemplo: cpf=40028922&name=XXXXXX&birthDate=YYYY-MM-DD
   String toParams() {
-    Map<String, dynamic> paramsMap = this.toJson();
+    Map<String, dynamic> paramsMap = toJson();
     paramsMap['birthDate'] = paramsMap['birthDate'].split('T')[0];
     paramsMap.removeWhere((key, value) => value == null || value == '');
     return paramsMap.entries

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../students/presentation/patients_profile.dart';
 
 class Patients extends StatefulWidget {
   const Patients({super.key});

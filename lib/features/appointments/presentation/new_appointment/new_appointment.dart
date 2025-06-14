@@ -6,6 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sistema_clinico/services/api_service.dart';
 
 class NewAppointmentScreen extends StatefulWidget {
+  const NewAppointmentScreen({super.key});
+
   @override
   _NewAppointmentScreenState createState() => _NewAppointmentScreenState();
 }

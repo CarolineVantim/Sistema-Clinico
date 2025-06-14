@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
 class AddService extends StatefulWidget {
@@ -77,7 +76,9 @@ class _AddServiceState extends State<AddService> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('NOVO ATENDIMENTO'),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.only(
@@ -89,18 +90,68 @@ class _AddServiceState extends State<AddService> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const Text(
-                "Adicionar Atendimento",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Flexible(
+                    child: TextFormField(
+                        decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      // hintText: 'Busca',
+                      labelText: 'Pesquisar',
+                      prefixIcon: Icon(Icons.search),
+                      suffixIcon: Icon(Icons.cancel), helperText: 'Pacientes',
+                    )),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Flexible(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        // hintText: 'Data',
+                        label: Text('Data'),
+                        suffixIcon: Icon(Icons.calendar_today),
+                        helperText: 'MM/DD/AAAA',
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: TextFormField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(
+                      // label: Text("Título"),
+                      // hintText: "Informe o título do atendimento",
+                      labelText: 'Título',
+                      border: OutlineInputBorder(),
+                      labelStyle: TextStyle(color: Colors.blue),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      suffixIcon: Icon(Icons.cancel)),
                 ),
               ),
-              const SizedBox(height: 20),
               DropdownButtonFormField<String>(
+                decoration: InputDecoration(
+                  labelText: 'Profissão',
+                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: Colors.blue),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                ),
                 value: _selectedMateria,
-                hint: const Text("Selecionar função"),
+                hint: const Text("Profissão"),
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedMateria = newValue;
@@ -113,35 +164,40 @@ class _AddServiceState extends State<AddService> {
                   );
                 }).toList(),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () => _pickDateTime(context),
-                child: Text(_selectedDate == null
-                    ? 'Escolher Data e Hora'
-                    : '${DateFormat('dd/MM/yyyy').format(_selectedDate!)} ${_selectedTime!.format(context)}'),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: "Título",
-                  hintText: "Informe o título do atendimento",
-                  border: OutlineInputBorder(),
-                  labelStyle: TextStyle(color: Colors.blue),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: TextFormField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(
+                      // label: Text("Título"),
+                      // hintText: "Informe o título do atendimento",
+                      labelText: 'Profissional',
+                      border: OutlineInputBorder(),
+                      labelStyle: TextStyle(color: Colors.blue),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      suffixIcon: Icon(Icons.cancel)),
                 ),
               ),
-              const SizedBox(height: 20),
+              // const SizedBox(height: 20),
+              // ElevatedButton(
+              //   onPressed: () => _pickDateTime(context),
+              //   child: Text(_selectedDate == null
+              //       ? 'Escolher Data e Hora'
+              //       : '${DateFormat('dd/MM/yyyy').format(_selectedDate!)} ${_selectedTime!.format(context)}'),
+              // ),
+              // const SizedBox(height: 20),
+              // const SizedBox(height: 20),
               TextFormField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(
-                  labelText: "Descrição",
-                  hintText: "Conte um pouco sobre o atendimento",
+                  labelText: "Observação",
+                  helperText: 'Descrição completa do atendimento',
+                  // hintText: "Conte um pouco sobre o atendimento",
                   border: OutlineInputBorder(),
                   labelStyle: TextStyle(color: Colors.blue),
                   enabledBorder: OutlineInputBorder(
@@ -155,29 +211,56 @@ class _AddServiceState extends State<AddService> {
                 maxLines: 5,
                 keyboardType: TextInputType.multiline,
               ),
-              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: SizedBox(
+                  height: 48,
+                  width: double.maxFinite,
+                  child: FilledButton.tonal(
+                    onPressed: _createLesson,
+                    // style: ElevatedButton.styleFrom(
+                    //   foregroundColor: Colors.white,
+                    //   backgroundColor: Colors.blue,
+                    // ),
+                    child: const Text("ANEXAR ARQUIVO"),
+                  ),
+                ),
+              ),
+              // const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(
-                    onPressed: _createLesson,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.blue,
-                    ),
-                    child: const Text("Criar"),
-                  ),
-                  OutlinedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.blue),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
+                  Expanded(
+                    child: SizedBox(height: 48,
+                      child: FilledButton(
+                        onPressed: _createLesson,
+                        style: ElevatedButton.styleFrom(
+                          // foregroundColor: Colors.white,
+                          // backgroundColor: Colors.blue,
+                        ),
+                        child: const Text("SALVAR"),
                       ),
                     ),
-                    child: const Text("Cancelar"),
+                  ),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                      height: 48,
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: OutlinedButton.styleFrom(
+                          // foregroundColor: Colors.blue,
+                          // backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.blue),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                        ),
+                        child: const Text("CANCELAR"),
+                      ),
+                    ),
                   ),
                 ],
               ),
