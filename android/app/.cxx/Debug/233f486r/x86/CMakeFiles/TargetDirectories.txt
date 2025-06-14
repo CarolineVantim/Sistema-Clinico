@@ -1,0 +1,2 @@
+C:/Users/Caroline/Sistema-Clinico/android/app/.cxx/Debug/233f486r/x86/CMakeFiles/edit_cache.dir
+C:/Users/Caroline/Sistema-Clinico/android/app/.cxx/Debug/233f486r/x86/CMakeFiles/rebuild_cache.dir
