@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:sistema_clinico/services/api_service.dart';
+import 'package:sistema_clinico/features/appointments/presentation/new_appointment/new_appointment.dart';
 
 class Appointments extends StatefulWidget {
   const Appointments({super.key});

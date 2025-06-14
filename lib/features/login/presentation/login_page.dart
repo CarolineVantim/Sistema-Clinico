@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistema_clinico/services/api_service.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
     final password = _passwordController.text;
 
     try {
-      final response = await ApiClient().authAutenticate(username, password);
+      final response = await ApiClient().authAuthenticate(username, password);
       if (response['statusCode'] == 200) {
         prefs.setString("username", response["data"]["username"]);
         print(response["data"]["username"]);

@@ -7,7 +7,7 @@ part of 'clinical_care_repository_impl.dart';
 // **************************************************************************
 
 String _$clinicalcareRepositoryHash() =>
-    r'c2a4e4542b5ffa5147c17751bb4684c804ae3ebe';
+    r'7f135d291f78e5baf987454a61994720ca8adbf1';
 
 /// See also [clinicalcareRepository].
 @ProviderFor(clinicalcareRepository)
@@ -27,7 +27,7 @@ final clinicalcareRepositoryProvider =
 typedef ClinicalcareRepositoryRef
     = AutoDisposeProviderRef<ClinicalCareRepository>;
 String _$clinicalCareByStudentCpfHash() =>
-    r'da73ebb5fe4dbeae008a90cfe77e628c13fa41a6';
+    r'4afbf7db9dadf7c81e7e0e56c3e470e9456408ee';
 
 /// Copied from Dart SDK
 class _SystemHash {

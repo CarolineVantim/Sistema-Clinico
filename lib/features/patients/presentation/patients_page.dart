@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:sistema_clinico/services/api_service.dart';
-import 'patients_profile.dart';
 
 class Patients extends StatefulWidget {
   const Patients({super.key});
@@ -107,22 +105,22 @@ class _PatientsState extends State<Patients> {
                             ? const Icon(Icons.person, color: Colors.grey)
                             : null,
                       ),
-                      title: Text(patient['name']!),
-                      subtitle: Text(patient['disabilityType']!),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.notes),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PatientsProfile(
-                                name: patient['name']!,
-                                avatar: Icons.person,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                      // title: Text(patient['name']!),
+                      // subtitle: Text(patient['age']!),
+                      // trailing: IconButton(
+                      //   icon: const Icon(Icons.notes),
+                      //   onPressed: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => PatientsProfile(
+                      //           name: patient['name']!,
+                      //           avatar: patient['avatar'],
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
                     ),
                   ),
                 );

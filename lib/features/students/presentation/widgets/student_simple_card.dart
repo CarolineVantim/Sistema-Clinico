@@ -1,15 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:sistema_clinico/shared/constants/constants.dart';
-import 'package:sistema_clinico/features/students/domain/students_model.dart';
+import 'package:sistema_clinico/shared/data/models/student.dart';
 
 import '../../../clinicalcare/presentation/clinical_care_page.dart';
 
 class StudentSimpleCard extends StatelessWidget {
   const StudentSimpleCard({super.key, required this.student});
 
-  final StudentModel student;
+  final Student student;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +39,20 @@ class StudentSimpleCard extends StatelessWidget {
           style: Theme.of(context).textTheme.bodyLarge,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
+        ),
+        trailing: IconButton(
+          icon: const Icon(Icons.notes),
+          onPressed: () {
+            // Navigator.push(
+            //   context,
+            // MaterialPageRoute(
+            //   builder: (context) => PatientsProfile(
+            //     name: patient['name']!,
+            //     avatar: patient['avatar'],
+            //   ),
+            // ),
+            // );
+          },
         ),
       ),
     );

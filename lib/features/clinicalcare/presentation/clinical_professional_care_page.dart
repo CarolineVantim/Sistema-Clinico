@@ -5,9 +5,9 @@ import 'package:sistema_clinico/features/clinicalcare/data/clinical_care_reposit
 import 'package:sistema_clinico/features/clinicalcare/data/clinical_care_repository_date_impl.dart';
 import 'package:sistema_clinico/features/clinicalcare/data/clinical_care_repository_date_position_impl.dart';
 import 'package:sistema_clinico/features/treatment/presentation/treatment_description_page.dart';
+import 'package:sistema_clinico/shared/data/models/student.dart';
 
 import 'package:sistema_clinico/shared/widgets/loading_widgets.dart';
-import '../../students/domain/students_model.dart';
 import 'students_attendance_list_widget.dart';
 import '../presentation/widgets/floating_add_button.dart';
 import 'widgets/filterDateDropdown.dart';
@@ -15,7 +15,7 @@ import 'widgets/filterDateDropdown.dart';
 class ClinicalCarePage extends ConsumerStatefulWidget {
   const ClinicalCarePage(this.student, {super.key});
 
-  final StudentModel student;
+  final Student student;
 
   @override
   _ClinicalCarePageState createState() => _ClinicalCarePageState();
@@ -55,7 +55,7 @@ class _ClinicalCarePageState extends ConsumerState<ClinicalCarePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Estudantes'),
+        title: const Text('Pacientes'),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),

@@ -1,23 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sistema_clinico/features/appointments/presentation/appointments_page.dart';
-import 'package:sistema_clinico/features/login/presentation/login_page.dart';
-import 'package:sistema_clinico/features/students/presentation/students_page.dart';
-import 'package:sistema_clinico/features/treatment/presentation/service_detail_page.dart';
-import 'package:sistema_clinico/features/patients/presentation/patients_page.dart';
-import 'package:sistema_clinico/features/settings/presentation/settings_page.dart';
-import 'package:sistema_clinico/features/home/presentation/home_page.dart';
-import 'package:sistema_clinico/features/treatment/presentation/treatment_description_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Garante a inicialização correta
   await dotenv.load(); // Carrega o arquivo .env
-  final Future<SharedPreferencesWithCache> _prefs =
-      SharedPreferencesWithCache.create(
-          cacheOptions: const SharedPreferencesWithCacheOptions(
-              allowList: <String>{'counter'}));
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -32,10 +21,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: Routes.login, // Define a rota inicial como uma constante
+      initialRoute: Routes.home, // Define a rota inicial como uma constante
       routes: {
         Routes.login: (context) => const LoginPage(),
-        Routes.home: (context) => HomePage(),
+        Routes.home: (context) => const HomePage(),
         Routes.students: (context) => const StudentsPage(),
         Routes.treatmentDescription: (context) => const AddService(),
         Routes.patients: (context) => const Patients(),

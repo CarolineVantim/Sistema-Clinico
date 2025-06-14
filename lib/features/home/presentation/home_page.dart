@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sistema_clinico/shared/constants/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,7 +19,7 @@ class _HomePageState extends State<HomePage> {
     MenuItemCard(
       titulo: 'NOVO ATENDIMENTO',
       resourceEnum: ImageResourceEnum.autism,
-      route: Routes.appointment,
+      route: Routes.treatmentDescription,
     ),
     MenuItemCard(
       titulo: 'AGENDAMENTOS',
@@ -30,7 +29,7 @@ class _HomePageState extends State<HomePage> {
     MenuItemCard(
       titulo: 'PACIENTES',
       resourceEnum: ImageResourceEnum.children,
-      route: Routes.patients,
+      route: Routes.students,
     ),
     MenuItemCard(
       titulo: 'CONFIGURAÇÕES',
@@ -40,55 +39,51 @@ class _HomePageState extends State<HomePage> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-    _loadUserName();
-  }
-
-  Future<void> _loadUserName() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userName = prefs.getString('username') ?? 'Usuário';
-    });
-  }
-
-  void _logout() {
-    // Lógica para sair da aplicação.
-    Navigator.pushReplacementNamed(context, Routes.login);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: userName == null
-          ? const Center(child: CircularProgressIndicator())
-          : ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
+      appBar: AppBar(
+        actions: [
+          TextButton(
+            onPressed: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              await prefs.remove('username');
+              Navigator.pushReplacementNamed(context, Routes.login);
+            },
+            child: const Text('SAIR'),
+          ),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        children: [
+          Card.outlined(
+            color: const Color(0xFF257A9F),
+            margin: const EdgeInsets.fromLTRB(4, 16, 4, 32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Card.outlined(
-                  color: const Color(0xFF257A9F),
-                  margin: const EdgeInsets.fromLTRB(4, 16, 4, 32),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Container(
-                            height: 75,
-                            width: 75,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            padding: const EdgeInsets.all(8),
-                            margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                            alignment: Alignment.center,
-                          ),
-                          Text(
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                        height: 75,
+                        width: 75,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: const EdgeInsets.all(8),
+                        margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                        alignment: Alignment.center),
+                    FutureBuilder<SharedPreferences>(
+                      future: SharedPreferences.getInstance(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          String userName =
+                              snapshot.data?.getString('username') ?? 'Usuário';
+                          return Text(
                             'Olá, $userName',
                             style: Theme.of(context)
                                 .textTheme
@@ -149,11 +144,6 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _logout,
-        label: const Text('SAIR'),
-        icon: const Icon(Icons.logout),
-      ),
     );
   }
 }

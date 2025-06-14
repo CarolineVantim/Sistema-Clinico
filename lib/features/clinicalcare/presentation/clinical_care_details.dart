@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sistema_clinico/features/clinicalcare/domain/clinical_care.dart';
 

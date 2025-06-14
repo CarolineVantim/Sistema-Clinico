@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_clinico/shared/utils/theme.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sistema_clinico/app.dart';
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
 
   @override
-  _SettingsPage createState() => _SettingsPage();
+  _SettingsPageState createState() => _SettingsPageState();
 }
 
-class _SettingsPage extends State<SettingsPage> {
-  int _selectedIndex = 0;
-  String searchText = "";
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
+class _SettingsPageState extends ConsumerState<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +17,7 @@ class _SettingsPage extends State<SettingsPage> {
         title: const Text('Configurações'),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -35,9 +27,9 @@ class _SettingsPage extends State<SettingsPage> {
             ),
             const SizedBox(width: 10),
             Switch(
-              value: ThemeChange.instance.isDartTheme,
+              value: ref.watch(isDarkTheme),
               onChanged: (value) {
-                ThemeChange.instance.changeTheme();
+                ref.read(isDarkTheme.notifier).update((state) => !value);
               },
             ),
           ],
