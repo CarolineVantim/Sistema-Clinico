@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
 class Patients extends StatefulWidget {
@@ -8,20 +9,41 @@ class Patients extends StatefulWidget {
 }
 
 class _PatientsState extends State<Patients> {
-  final List<Map<String, dynamic>> patients = [
-    {'name': 'Marcos', 'age': '4 anos', 'avatar': Icons.child_care},
-    {'name': 'Maria Clara', 'age': '3 anos', 'avatar': Icons.face},
-    {'name': 'João Vitor', 'age': '7 anos', 'avatar': Icons.child_care},
-    {'name': 'Marcos', 'age': '4 anos', 'avatar': Icons.child_care},
-  ];
-
+  List<Map<String, dynamic>> patients = [];
   List<Map<String, dynamic>> filteredPatients = [];
   String searchQuery = "";
 
   @override
   void initState() {
     super.initState();
-    filteredPatients = patients;
+    fetchPatients();
+  }
+
+  // Função para buscar dados da API
+  Future<void> fetchPatients() async {
+    try {
+      final response = await ApiClient().viewAllP();
+      if (response['statusCode'] == 200) {
+        final List<Map<String, dynamic>> data =
+            List<Map<String, dynamic>>.from(response['data']);
+        setState(() {
+          patients = data.map((patient) {
+            return {
+              'cpf': patient['cpf'],
+              'name': patient['name'],
+              'disabilityType': patient['disabilityType'],
+              'birthDate': patient['birthDate'],
+              'studentImage': patient['studentImage'],
+            };
+          }).toList();
+          filteredPatients = patients;
+        });
+      } else {
+        throw Exception('Erro ao buscar dados: ${response["statusCode"]}');
+      }
+    } catch (e) {
+      print('Erro ao buscar dados: $e');
+    }
   }
 
   void updateSearchQuery(String query) {
@@ -70,16 +92,18 @@ class _PatientsState extends State<Patients> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 16.0, vertical: 8.0),
                   child: Card(
-                    color: Colors.white, // Alterado para branco
+                    color: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: ListTile(
                       leading: CircleAvatar(
-                        child: Icon(
-                          patient['avatar'],
-                          color: Colors.blue,
-                        ),
+                        backgroundImage: patient['studentImage'] != ""
+                            ? MemoryImage(base64Decode(patient['studentImage']))
+                            : null,
+                        child: patient['studentImage'] == ""
+                            ? const Icon(Icons.person, color: Colors.grey)
+                            : null,
                       ),
                       // title: Text(patient['name']!),
                       // subtitle: Text(patient['age']!),

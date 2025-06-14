@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sistema_clinico/features/appointments/presentation/new_appointment/new_appointment.dart';
 
@@ -9,29 +10,56 @@ class Appointments extends StatefulWidget {
 }
 
 class _AppointmentsState extends State<Appointments> {
-  final List<Map<String, String>> patients = [
-    {'name': 'Marcos', 'date': '10/09/2024'},
-    {'name': 'Alice', 'date': '12/09/2024'},
-    {'name': 'Jennifer', 'date': '19/09/2024'},
-    {'name': 'Enzo', 'date': '23/09/2024'},
-  ];
-
-  List<Map<String, String>> filteredPatients = [];
+  List<Map<String, dynamic>> appointments = [];
+  List<Map<String, dynamic>> filteredAppointments = [];
   String searchQuery = "";
 
   @override
   void initState() {
     super.initState();
-    filteredPatients = patients;
+    fetchAppointments();
+  }
+
+  Future<void> fetchAppointments() async {
+    try {
+      final response = await ApiClient().viewAllClass();
+
+      if (response["statusCode"] == 200) {
+        final List<Map<String, dynamic>> data =
+            List<Map<String, dynamic>>.from(response['data']);
+
+        setState(() {
+          appointments = data.map((item) {
+            return {
+              'id': item['id'],
+              'professionalName': item['professionalName'],
+              'discipline': item['discipline'],
+              'classDate': item['classDate'],
+              'subject': item['subject'],
+            };
+          }).toList();
+          filteredAppointments = appointments;
+        });
+      } else {
+        throw Exception(
+            'Erro ao buscar agendamentos: ${response["statusCode"]}');
+      }
+    } catch (e) {
+      print('Erro ao buscar agendamentos: $e');
+    }
   }
 
   void updateSearchQuery(String query) {
     setState(() {
       searchQuery = query;
-      filteredPatients = patients
-          .where((patient) => patient['name']!
-              .toLowerCase()
-              .contains(searchQuery.toLowerCase()))
+      filteredAppointments = appointments
+          .where((appointment) =>
+              appointment['professionalName']
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase()) ||
+              appointment['subject']
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase()))
           .toList();
     });
   }
@@ -40,7 +68,7 @@ class _AppointmentsState extends State<Appointments> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Agendamentos"),
+        title: const Text("Agendamentos"),
       ),
       body: Column(
         children: [
@@ -48,7 +76,7 @@ class _AppointmentsState extends State<Appointments> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               decoration: InputDecoration(
-                hintText: "Pesquisar paciente",
+                hintText: "Pesquisar por profissional ou assunto",
                 prefixIcon: const Icon(Icons.search, color: Colors.blue),
                 filled: true,
                 fillColor: Colors.blue.shade50,
@@ -63,43 +91,44 @@ class _AppointmentsState extends State<Appointments> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: filteredPatients.length,
-              itemBuilder: (context, index) {
-                final patient = filteredPatients[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: ListTile(
-                      leading: const CircleAvatar(
-                        child: Icon(Icons.person),
-                      ),
-                      title: Text(patient['name']!),
-                      subtitle: Text(patient['date']!),
-                    ),
+            child: filteredAppointments.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    itemCount: filteredAppointments.length,
+                    itemBuilder: (context, index) {
+                      final appointment = filteredAppointments[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              child: Text(
+                                appointment['discipline'][0],
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              backgroundColor: Colors.blue,
+                            ),
+                            title: Text(appointment['professionalName']),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                    "Disciplina: ${appointment['discipline']}"),
+                                Text("Data: ${appointment['classDate']}"),
+                                Text("Assunto: ${appointment['subject']}"),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => NewAppointmentScreen()),
-          );
-        },
       ),
     );
   }

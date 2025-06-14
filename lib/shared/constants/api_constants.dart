@@ -6,7 +6,7 @@ class ApiConstants {
   static String usersFindBy = '/users/find_by';
   static String usersDelete = '/users/delete/'; //{id}
 
-  static String authAuthenticate = '/api/auth/authenticate';
+  static String authAuthenticate = '/auth/authenticate';
   static String authRegister = '/auth/register';
 
   static String studentUpdate = '/student/update';
@@ -22,6 +22,8 @@ class ApiConstants {
   static String classUpdate = '/class/update';
   static String classRegister = '/class_records/register';
   static String classFind = '/class/find_class';
+  static String classResumeFind = '/class_records/find_resume_class';
+
   static String classDelete = '/class/delete'; //{id}
 
   static String professional = '/professional'; //
