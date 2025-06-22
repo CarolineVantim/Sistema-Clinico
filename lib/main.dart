@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'app.dart';
+import 'package:sistema_clinico/features/login/presentation/login_page.dart';
+import 'package:sistema_clinico/features/home/presentation/home_page.dart';
+import 'package:sistema_clinico/features/students/presentation/students_page.dart';
+import 'package:sistema_clinico/features/treatment/presentation/treatment_description_page.dart';
+import 'package:sistema_clinico/features/patients/presentation/patients_page.dart';
+import 'package:sistema_clinico/features/appointments/presentation/appointments_page.dart';
+import 'package:sistema_clinico/features/settings/presentation/settings_page.dart';
+import 'package:sistema_clinico/features/treatment/presentation/service_detail_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Garante a inicialização correta
