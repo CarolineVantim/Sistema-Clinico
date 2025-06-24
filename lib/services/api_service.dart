@@ -9,43 +9,57 @@ class ApiClient {
   final Dio _dio = Dio();
 
   FutureOr<Map<String, dynamic>> authAuthenticate(
-      String cpfcrm, String password) async {
+      String username, String password) async {
+    // Renomeado cpfcrm para username para clareza
     String link = (dotenv.get('API_LINK') + ApiConstants.authAuthenticate);
 
     Map<String, dynamic> requestBody = {
-      "username": cpfcrm,
+      "username": username, // Usamos o username que foi passado aqui
       "password": password,
     };
 
     Response response = await _dio.post(link, data: requestBody);
 
-    print('Response Status Code: ${response.statusCode}');
-    print('Response Data: ${response.data}');
+    print('Response Status Code (ApiClient): ${response.statusCode}');
+    print('Response Data (ApiClient): ${response.data}');
 
     if (response.statusCode == 200) {
       var responseData = response.data;
 
+      // ATENÇÃO: A API retorna 'userType', não 'username' na resposta de auth.
+      // ELA RETORNA token e userType, então verificamos por eles.
       if (responseData != null &&
-          responseData['username'] != null &&
-          responseData['token'] != null) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
+          responseData['token'] != null && // Verificando se 'token' existe
+          responseData['userType'] != null) {
+        // Verificando se 'userType' existe
 
-        prefs.setString('username', responseData['username']);
-        prefs.setString('token', responseData['token']);
+        // NOTA: O username/cpfcrm não vem da API de volta,
+        // então o salvamos do que foi enviado na requisição.
+        // Ou, para manter a consistência, podemos retornar
+        // o userType e token e deixar a LoginPage salvar o username.
 
+        // AQUI ESTÁ A MUDANÇA PRINCIPAL NO RETORNO:
+        // Retornamos o username que foi passado para a função,
+        // junto com o token e userType que vieram da API.
         return {
           "statusCode": response.statusCode,
-          "data": responseData,
+          "token": responseData['token'],
+          "userType": responseData['userType'],
+          "username": username, // Adicionamos o username que foi usado no login
         };
       } else {
+        // Se a API retornou 200, mas a estrutura dos dados está errada (falta token ou userType)
         throw Exception(
-            'Estrutura de dados inválida ou campos ausentes na resposta da API.');
+            'Estrutura de dados inválida ou campos ausentes (token ou userType) na resposta da API de autenticação.');
       }
     } else {
+      // Se o status code não for 200
       throw Exception(
           'Falha na autenticação com código: ${response.statusCode}');
     }
   }
+
+  // --- Mantenha o restante do seu ApiClient inalterado ---
 
   Future<void> logout() async {
     try {
@@ -267,7 +281,7 @@ class ApiClient {
       );
 
       return {
-        "statusCode": response.statusCode,
+        "statusCode": 500,
         "data": response.data,
       };
     } catch (e) {

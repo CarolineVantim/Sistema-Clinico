@@ -148,7 +148,7 @@ class _AddServiceState extends ConsumerState<AddService> {
       final String apiBaseUrl = dotenv.env['API_LINK']!;
 
       final response = await http.get(
-        Uri.parse('$apiBaseUrl/api/student/find_by?cpf=$query'),
+        Uri.parse('$apiBaseUrl/student/find_by?cpf=$query'),
       );
 
       if (response.statusCode == 200) {
