@@ -18,7 +18,7 @@ class AtendimentoNotifier extends AsyncNotifier<void> {
   Future<void> criarAtendimento(Atendimento atendimento) async {
     final String apiBaseUrl = dotenv.env['API_LINK']!;
 
-    final url = Uri.parse('$apiBaseUrl/api/class_records/register');
+    final url = Uri.parse('$apiBaseUrl/class_records/register');
 
     state = const AsyncLoading();
     try {

@@ -7,6 +7,12 @@ import 'package:sistema_clinico/shared/data/providers/atendimento_provider.dart'
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// Widgets
+import 'package:sistema_clinico/shared/widgets/custom_text_form_field.dart';
+import 'package:sistema_clinico/shared/widgets/date_time_picker_field.dart';
+import 'package:sistema_clinico/shared/widgets/custom_dropdown_field.dart';
+import 'package:sistema_clinico/shared/widgets/action_buttons.dart';
+
 class AddService extends ConsumerStatefulWidget {
   const AddService({super.key});
 
@@ -19,16 +25,13 @@ class _AddServiceState extends ConsumerState<AddService> {
 
   final TextEditingController _clientController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _professionalController =
-      TextEditingController(); // Mantido
+  final TextEditingController _professionalController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
   List<String> _clientSuggestions = [];
-  // List<String> _professionalSuggestions = []; // REMOVIDO
 
   String? selectedCpf;
-  String?
-      selectedCrm; // Ainda mantemos para usar no modelo de Atendimento, mas o valor virá do campo de texto
+  String? selectedCrm;
 
   final List<String> materias = [
     'Fisioterapia',
@@ -39,36 +42,13 @@ class _AddServiceState extends ConsumerState<AddService> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
 
-  String get formattedDateTime {
-    if (_selectedDate == null || _selectedTime == null) {
-      return '';
-    }
-    final date = DateFormat('dd/MM/yyyy').format(_selectedDate!);
-    final time = _selectedTime!.format(context);
-    return '$date $time';
-  }
-
-  Future<void> _pickDateTime(BuildContext context) async {
-    final pickedDate = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2030),
-    );
-
-    if (pickedDate != null) {
-      final pickedTime = await showTimePicker(
-        context: context,
-        initialTime: _selectedTime ?? TimeOfDay.now(),
-      );
-
-      if (pickedTime != null) {
-        setState(() {
-          _selectedDate = pickedDate;
-          _selectedTime = pickedTime;
-        });
-      }
-    }
+  @override
+  void dispose() {
+    _clientController.dispose();
+    _titleController.dispose();
+    _professionalController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
   }
 
   void _resetForm() {
@@ -83,11 +63,10 @@ class _AddServiceState extends ConsumerState<AddService> {
     _selectedDate = null;
     _selectedTime = null;
     _clientSuggestions = [];
-    // _professionalSuggestions = []; // REMOVIDO
     setState(() {});
   }
 
-  Future<void> _createLesson(WidgetRef ref) async {
+  Future<void> _createLesson() async {
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Preencha todos os campos obrigatórios')),
@@ -95,11 +74,17 @@ class _AddServiceState extends ConsumerState<AddService> {
       return;
     }
 
-    // Ajuste: selectedCrm agora vem diretamente do _professionalController.text
-    // O CPF ainda precisa ser selecionado, então o validador do cliente é mantido
     if (selectedCpf == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Selecione um cliente válido')),
+      );
+      return;
+    }
+
+    if (_selectedDate == null || _selectedTime == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Por favor, selecione a data e o horário.')),
       );
       return;
     }
@@ -122,7 +107,7 @@ class _AddServiceState extends ConsumerState<AddService> {
       discipline: _selectedMateria!,
       location: 'Sala 1',
       notes: [_descriptionController.text],
-      crm: _professionalController.text, // **CRM agora vem do texto digitado**
+      crm: _professionalController.text,
       mediaId: 0,
       studentCpf: selectedCpf!,
     );
@@ -175,25 +160,6 @@ class _AddServiceState extends ConsumerState<AddService> {
     }
   }
 
-  // Future<List<String>> fetchProfissionais(String query) async { // REMOVIDO
-  //   await Future.delayed(const Duration(milliseconds: 300));
-  //   try {
-  //     final String apiBaseUrl = dotenv.env['API_LINK']!;
-  //     final response = await http.get(
-  //       Uri.parse(
-  //           '$apiBaseUrl/api/class_records/find_class_by_professional_crm?crm=$query'),
-  //     );
-  //     if (response.statusCode == 200) {
-  //       final List data = jsonDecode(response.body);
-  //       return data.map<String>((e) => e['crm'].toString()).toSet().toList();
-  //     } else {
-  //       return [];
-  //     }
-  //   } catch (e) {
-  //     return [];
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     final asyncState = ref.watch(atendimentoProvider);
@@ -212,15 +178,12 @@ class _AddServiceState extends ConsumerState<AddService> {
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
+              CustomTextFormField(
                 controller: _clientController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Cliente (CPF)',
-                  hintText: 'Digite o CPF do cliente',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.search),
-                ),
+                labelText: 'Cliente (CPF)',
+                hintText: 'Digite o CPF do cliente',
+                prefixIcon: const Icon(Icons.search),
                 onChanged: (query) async {
                   if (query.isNotEmpty && query.length >= 3) {
                     final suggestions = await fetchClientes(query);
@@ -271,15 +234,20 @@ class _AddServiceState extends ConsumerState<AddService> {
                   ),
                 ),
               const SizedBox(height: 16),
-              TextFormField(
-                readOnly: true,
-                controller: TextEditingController(text: formattedDateTime),
-                decoration: const InputDecoration(
-                  labelText: 'Data e Horário',
-                  border: OutlineInputBorder(),
-                  suffixIcon: Icon(Icons.calendar_today),
-                ),
-                onTap: () => _pickDateTime(context),
+              DateTimePickerField(
+                labelText: 'Data e Horário',
+                initialDate: _selectedDate,
+                initialTime: _selectedTime,
+                onDateSelected: (date) {
+                  setState(() {
+                    _selectedDate = date;
+                  });
+                },
+                onTimeSelected: (time) {
+                  setState(() {
+                    _selectedTime = time;
+                  });
+                },
                 validator: (value) {
                   if (_selectedDate == null || _selectedTime == null) {
                     return 'Por favor, selecione a data e o horário.';
@@ -288,12 +256,9 @@ class _AddServiceState extends ConsumerState<AddService> {
                 },
               ),
               const SizedBox(height: 16),
-              TextFormField(
+              CustomTextFormField(
                 controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Título do atendimento',
-                  border: OutlineInputBorder(),
-                ),
+                labelText: 'Título do atendimento',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, insira um título.';
@@ -302,12 +267,9 @@ class _AddServiceState extends ConsumerState<AddService> {
                 },
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
+              CustomDropdownField<String>(
                 value: _selectedMateria,
-                decoration: const InputDecoration(
-                  labelText: 'Profissão',
-                  border: OutlineInputBorder(),
-                ),
+                labelText: 'Profissão',
                 onChanged: (value) => setState(() => _selectedMateria = value),
                 items: materias
                     .map((e) => DropdownMenuItem(value: e, child: Text(e)))
@@ -320,16 +282,10 @@ class _AddServiceState extends ConsumerState<AddService> {
                 },
               ),
               const SizedBox(height: 16),
-              // --- CAMPO PROFISSIONAL SIMPLIFICADO ---
-              TextFormField(
+              CustomTextFormField(
                 controller: _professionalController,
-                decoration: const InputDecoration(
-                  labelText: 'Registro do Profissional', // Alterado
-                  hintText: 'Número de Registro do Profissional', // Adicionado
-                  border: OutlineInputBorder(),
-                  // prefixIcon: Icon(Icons.search), // REMOVIDO
-                ),
-                // onChanged: (query) async { ... } // REMOVIDO
+                labelText: 'Registro do Profissional',
+                hintText: 'Número de Registro do Profissional',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, insira o registro do profissional.';
@@ -337,41 +293,12 @@ class _AddServiceState extends ConsumerState<AddService> {
                   return null;
                 },
               ),
-              // if (_professionalSuggestions.isNotEmpty) // REMOVIDO
-              //   Container( // REMOVIDO
-              //     constraints: const BoxConstraints(maxHeight: 200), // REMOVIDO
-              //     decoration: BoxDecoration( // REMOVIDO
-              //       border: Border.all(color: Colors.grey), // REMOVIDO
-              //       borderRadius: BorderRadius.circular(4.0), // REMOVIDO
-              //     ), // REMOVIDO
-              //     child: ListView.builder( // REMOVIDO
-              //       shrinkWrap: true, // REMOVIDO
-              //       itemCount: _professionalSuggestions.length, // REMOVIDO
-              //       itemBuilder: (context, index) { // REMOVIDO
-              //         final suggestion = _professionalSuggestions[index]; // REMOVIDO
-              //         return ListTile( // REMOVIDO
-              //           title: Text(suggestion), // REMOVIDO
-              //           onTap: () { // REMOVIDO
-              //             setState(() { // REMOVIDO
-              //               _professionalController.text = suggestion; // REMOVIDO
-              //               selectedCrm = suggestion; // REMOVIDO
-              //               _professionalSuggestions = []; // REMOVIDO
-              //             }); // REMOVIDO
-              //             FocusScope.of(context).unfocus(); // REMOVIDO
-              //           }, // REMOVIDO
-              //         ); // REMOVIDO
-              //       }, // REMOVIDO
-              //     ), // REMOVIDO
-              //   ), // REMOVIDO
               const SizedBox(height: 16),
-              TextFormField(
+              CustomTextFormField(
                 controller: _descriptionController,
+                labelText: 'Observação',
+                hintText: 'Descrição completa do atendimento',
                 maxLines: 4,
-                decoration: const InputDecoration(
-                  labelText: 'Observação',
-                  helperText: 'Descrição completa do atendimento',
-                  border: OutlineInputBorder(),
-                ),
               ),
               const SizedBox(height: 24),
               FilledButton.tonal(
@@ -386,30 +313,22 @@ class _AddServiceState extends ConsumerState<AddService> {
                 child: const Text("Anexar Imagem/Vídeo"),
               ),
               const SizedBox(height: 24),
-              if (asyncState is AsyncLoading)
-                const CircularProgressIndicator()
-              else
-                Row(
-                  children: [
-                    Expanded(
-                      child: FilledButton(
-                        onPressed: () => _createLesson(ref),
-                        child: const Text('Salvar'),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pop(context),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.red,
-                          side: const BorderSide(color: Colors.red),
-                        ),
-                        child: const Text('Cancelar'),
-                      ),
-                    ),
-                  ],
-                ),
+              Row(
+                children: [
+                  PrimaryButton(
+                    text: 'Salvar',
+                    onPressed: _createLesson,
+                    isLoading: asyncState is AsyncLoading,
+                  ),
+                  const SizedBox(width: 16),
+                  SecondaryButton(
+                    text: 'Cancelar',
+                    onPressed: () => Navigator.pop(context),
+                    foregroundColor: Colors.red,
+                    borderColor: Colors.red,
+                  ),
+                ],
+              ),
             ],
           ),
         ),

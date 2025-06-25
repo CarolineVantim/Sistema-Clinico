@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sistema_clinico/services/api_service.dart'; // Certifique-se que este caminho está correto
-import 'package:sistema_clinico/main.dart'; // Para acessar a classe Routes
-import 'package:sistema_clinico/shared/constants/constants.dart'; // Para o enum ImageResourceEnum
-import 'package:dio/dio.dart'; // Importa DioException para tratamento de erro mais específico
+import 'package:sistema_clinico/services/api_service.dart';
+import 'package:sistema_clinico/main.dart';
+import 'package:sistema_clinico/shared/constants/constants.dart';
+import 'package:dio/dio.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,12 +13,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // --- Controladores e Variáveis de Estado para a Lógica de Login ---
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
-  final GlobalKey<FormState> _formKey =
-      GlobalKey<FormState>(); // Para validação de formulário
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -29,7 +27,6 @@ class _LoginPageState extends State<LoginPage> {
 
   // --- Lógica de Login ---
   void _login() async {
-    // Valida os campos do formulário antes de prosseguir
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -39,54 +36,23 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     final prefs = await SharedPreferences.getInstance();
-    final usernameInput =
-        _usernameController.text; // Captura o username digitado
+    final usernameInput = _usernameController.text;
     final password = _passwordController.text;
 
     try {
-      print("DEBUG_LOGIN: Tentando autenticar com a API...");
-      // Chama o ApiClient passando o username digitado
       final response =
           await ApiClient().authAuthenticate(usernameInput, password);
-      print("DEBUG_LOGIN: Resposta da API recebida.");
-      print(
-          "DEBUG_LOGIN: Dados da Resposta do ApiClient: $response"); // Este print mostrará o novo formato
-
-      // O ApiClient agora retorna um Map que já garante a presença de 'token', 'userType' e 'username'
-      // Se essas chaves não estivessem presentes, uma exceção já teria sido lançada pelo ApiClient.
       final String token = response['token'];
       final String userType = response['userType'];
-      final String usernameRetornado =
-          response['username']; // Pega o username que o ApiClient retornou
+      final String usernameRetornado = response['username'];
 
-      // Salvando os dados nas SharedPreferences
       prefs.setString("token", token);
       prefs.setString(
           "username", usernameRetornado); // Salva o username retornado
       prefs.setString("userType", userType);
 
-      print(
-          "DEBUG_LOGIN: Autenticação bem-sucedida. Token, UserType e Username salvos.");
-      print(
-          "DEBUG_LOGIN: Usuário logado: $usernameRetornado (Tipo: $userType)");
-      print("DEBUG_LOGIN: Token recebido: $token");
-
-      // --- VERIFICAÇÃO DE CONTEXTO E NAVEGAÇÃO ---
-      print(
-          "DEBUG_LOGIN: Status mounted antes da navegação: ${context.mounted}");
-
-      if (!mounted) {
-        print("DEBUG_LOGIN: Widget não está montado, não é possível navegar.");
-        return;
-      }
-
-      print(
-          "DEBUG_LOGIN: Antes de tentar navegar para /home (usando rota nomeada)");
       Navigator.pushReplacementNamed(context, Routes.home);
-      print(
-          "DEBUG_LOGIN: Depois de tentar navegar para /home (se a chamada foi concluída)");
     } catch (e) {
-      // Tratamento de erros que podem vir do Dio ou da validação interna do ApiClient
       String errorMessage = 'Não foi possível fazer login. Tente novamente.';
       if (e.toString().contains('401')) {
         errorMessage = 'Credenciais incorretas.';
@@ -96,16 +62,14 @@ class _LoginPageState extends State<LoginPage> {
         errorMessage = 'Erro na resposta da API: ' +
             e.toString().replaceFirst('Exception: ', '');
       } else if (e is DioException) {
-        // Captura DioException para mensagens mais específicas de rede
         if (e.type == DioExceptionType.connectionError) {
           errorMessage =
               'Erro de conexão: Verifique sua internet ou o servidor da API.';
         } else if (e.response != null && e.response!.data != null) {
-          // Tenta extrair mensagem de erro do corpo da resposta da API, se disponível
           errorMessage = e.response!.data.toString();
         }
       }
-      print("DEBUG_LOGIN: Uma exceção ocorreu durante o login: $e");
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(errorMessage),
@@ -121,23 +85,16 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    // --- Definição das Cores do Layout ---
-    const Color topBlueColor =
-        Color(0xFFD0EDF8); // Azul pastel para a parte superior
-    const Color bottomWhiteColor =
-        Color(0xFFF9F7F0); // Quase branco/bege claro para o rodapé
-    const Color cardBackgroundColor =
-        Color(0xFFF0E5D8); // Cor do card de login (bege/rosado claro)
-    const Color loginButtonColor =
-        Color(0xFFB1D4E0); // Cor do botão de login (azul/cinza claro)
-    const Color logoTextColor =
-        Color(0xFF0083B8); // Cor do texto "Inclusivamente"
+    const Color topBlueColor = Color(0xFFD0EDF8);
+    const Color bottomWhiteColor = Color(0xFFF9F7F0);
+    const Color cardBackgroundColor = Color(0xFFF0E5D8);
+    const Color loginButtonColor = Color(0xFFB1D4E0);
+    const Color logoTextColor = Color(0xFF0083B8);
 
     return Scaffold(
       backgroundColor: bottomWhiteColor,
       body: Stack(
         children: [
-          // --- Camada de Fundo AZUL no Topo com Borda Arredondada na Parte de Baixo ---
           Positioned(
             left: 0,
             right: 0,
@@ -154,22 +111,17 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-
-          // --- Conteúdo da Tela (Logo, Card de Login, Copyright) ---
           SingleChildScrollView(
             child: SizedBox(
               height: MediaQuery.of(context).size.height,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment
-                    .center, // Centraliza o conteúdo da coluna verticalmente
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // --- ALTERAÇÃO AQUI: REDUZINDO O FLEX DO SPACER PARA SUBIR O CONTEÚDO ---
-                  const Spacer(flex: 1), // Reduzido de flex: 2 para flex: 1
+                  const Spacer(flex: 1),
 
-                  // --- Logo e Texto "Inclusivamente" ---
                   Image.asset(
-                    ImageResourceEnum.icone.path, // Usando o enum
-                    height: 120, // Altura da logo, ajuste conforme necessário
+                    ImageResourceEnum.icone.path,
+                    height: 120,
                   ),
                   const SizedBox(height: 20),
                   Text(
@@ -181,8 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
 
-                  const SizedBox(
-                      height: 20), // Espaçamento entre a logo e o card
+                  const SizedBox(height: 20),
 
                   // --- Card de Login ---
                   Padding(
@@ -196,16 +147,14 @@ class _LoginPageState extends State<LoginPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(25.0),
                         child: Form(
-                          key: _formKey, // Atribui a GlobalKey
+                          key: _formKey,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // --- Campo Username ---
                               TextFormField(
-                                controller:
-                                    _usernameController, // Conecta o controlador
+                                controller: _usernameController,
                                 decoration: InputDecoration(
-                                  labelText: 'Username',
+                                  labelText: 'Usuário',
                                   filled: true,
                                   fillColor: Colors.white,
                                   border: OutlineInputBorder(
@@ -216,7 +165,6 @@ class _LoginPageState extends State<LoginPage> {
                                       vertical: 15.0, horizontal: 15.0),
                                 ),
                                 validator: (value) {
-                                  // Adiciona validação
                                   if (value == null || value.isEmpty) {
                                     return 'Por favor, insira seu usuário';
                                   }
@@ -225,13 +173,11 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               const SizedBox(height: 15),
 
-                              // --- Campo Password ---
                               TextFormField(
-                                controller:
-                                    _passwordController, // Conecta o controlador
+                                controller: _passwordController,
                                 obscureText: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Password',
+                                  labelText: 'Senha',
                                   filled: true,
                                   fillColor: Colors.white,
                                   border: OutlineInputBorder(
@@ -276,7 +222,7 @@ class _LoginPageState extends State<LoginPage> {
 
                               // --- Botão Login (com CircularProgressIndicator) ---
                               _isLoading
-                                  ? const CircularProgressIndicator() // Mostra o spinner se estiver carregando
+                                  ? const CircularProgressIndicator()
                                   : ElevatedButton(
                                       onPressed:
                                           _login, // Chama a função de login
