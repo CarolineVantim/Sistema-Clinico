@@ -7,6 +7,7 @@ enum ImageResourceEnum {
   calendar('assets/images/home/calendar.svg'),
   children('assets/images/home/children.svg'),
   source('assets/images/home/source.svg'),
+  icone('assets/images/home/Icone.png'),
   base64Avatar(kBase64);
 
   final String path;

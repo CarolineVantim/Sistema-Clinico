@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
     MenuItemCard(
       titulo: 'NOVO ATENDIMENTO',
       resourceEnum: ImageResourceEnum.autism,
-      route: Routes.treatmentDescription,
+      route: Routes.appointment,
     ),
     MenuItemCard(
       titulo: 'AGENDAMENTOS',
@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
     MenuItemCard(
       titulo: 'PACIENTES',
       resourceEnum: ImageResourceEnum.children,
-      route: Routes.students,
+      route: Routes.patients,
     ),
     MenuItemCard(
       titulo: 'CONFIGURAÇÕES',
@@ -39,111 +39,176 @@ class _HomePageState extends State<HomePage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString('username') ?? 'Usuário';
+    });
+  }
+
+  void _logout() {
+    Navigator.pushReplacementNamed(context, Routes.login);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          TextButton(
-            onPressed: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              await prefs.remove('username');
-              Navigator.pushReplacementNamed(context, Routes.login);
-            },
-            child: const Text('SAIR'),
-          ),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
-        children: [
-          Card.outlined(
-            color: const Color(0xFF257A9F),
-            margin: const EdgeInsets.fromLTRB(4, 16, 4, 32),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Container(
-                        height: 75,
-                        width: 75,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: const EdgeInsets.all(8),
-                        margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                        alignment: Alignment.center),
-                    FutureBuilder<SharedPreferences>(
-                      future: SharedPreferences.getInstance(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          String userName =
-                              snapshot.data?.getString('username') ?? 'Usuário';
-                          return Text(
-                            'Olá, $userName',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineLarge!
-                                .copyWith(color: Colors.white60),
+      body: userName == null
+          ? const Center(child: CircularProgressIndicator())
+          : SafeArea(
+              child: Column(
+                children: [
+                  // Top Header
+                  Stack(
+                    children: [
+                      Container(
+                        height: 180,
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFC7DDE3),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(40),
+                            bottomRight: Radius.circular(40),
                           ),
-                        ],
+                        ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 16, 0, 20.0),
+                      Positioned(
+                        top: 16,
+                        right: 16,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            const Icon(
+                              Icons.notifications,
+                              size: 28,
+                              color: Colors.black54,
+                            ),
+                            Positioned(
+                              top: 2,
+                              right: 2,
+                              child: Container(
+                                width: 16,
+                                height: 16,
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                alignment: Alignment.center,
+                                child: const Text(
+                                  '3',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                        left: 16,
+                        top: 32,
+                        child: CircleAvatar(
+                          radius: 35,
+                          backgroundColor: const Color(0xFFE8DAB2),
+                          child: Icon(
+                            Icons.person,
+                            size: 40,
+                            color: Colors.deepPurple.shade700,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left: 110,
+                        top: 48,
                         child: Text(
-                          'Bem-vindo ao seu Dashboard',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall!
-                              .copyWith(color: Colors.white60),
+                          'Olá, $userName',
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 32.0),
-                  child: Align(
-                    alignment: const Alignment(0, 0),
-                    child: Text(
-                      'NAVEGUE POR',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall!
-                          .copyWith(fontWeight: FontWeight.bold),
+
+                  const SizedBox(height: 24),
+
+                  // Navegue Por
+                  const Text(
+                    'Navegue por',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF9B0036),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1,
-                      crossAxisSpacing: 4,
-                      mainAxisSpacing: 4,
-                    ),
-                    itemCount: features.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, features[index].route);
+
+                  const SizedBox(height: 24),
+
+                  // Grid de menus
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: GridView.builder(
+                        itemCount: features.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 20,
+                          mainAxisSpacing: 20,
+                          childAspectRatio: 1,
+                        ),
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, features[index].route);
+                            },
+                            child: features[index],
+                          );
                         },
-                        child: features[index],
-                      );
-                    },
+                      ),
+                    ),
                   ),
-                ),
-              ],
+
+                  const SizedBox(height: 16),
+
+                  // Botão sair
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF9B0036),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: _logout,
+                      icon: const Icon(Icons.logout, color: Colors.white),
+                      label: const Text(
+                        'SAIR',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

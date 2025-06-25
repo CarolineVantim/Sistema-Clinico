@@ -7,6 +7,6 @@ const tSelectedColor = Color(0xFFF4B71A);
 
 const tWhiteColor = Colors.white;
 const tDarkColor = Color(0xff000000);
-const tCardBgColor = Color(0xFFF7F6F1);
+const tCardBgColor = Color(0xFFC0D5DC);
 
 const tOnBoardingPage1Color = Colors.white;

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sistema_clinico/features/appointments/presentation/new_appointment/new_appointment.dart';
+import 'package:sistema_clinico/services/api_service.dart';
 
 class Appointments extends StatefulWidget {
   const Appointments({super.key});
@@ -106,11 +107,11 @@ class _AppointmentsState extends State<Appointments> {
                           ),
                           child: ListTile(
                             leading: CircleAvatar(
+                              backgroundColor: Colors.blue,
                               child: Text(
                                 appointment['discipline'][0],
                                 style: const TextStyle(color: Colors.white),
                               ),
-                              backgroundColor: Colors.blue,
                             ),
                             title: Text(appointment['professionalName']),
                             subtitle: Column(
