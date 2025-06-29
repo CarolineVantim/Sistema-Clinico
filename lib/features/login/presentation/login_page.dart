@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistema_clinico/services/api_service.dart';
-import 'package:sistema_clinico/main.dart';
-import 'package:sistema_clinico/shared/constants/constants.dart';
+import 'package:sistema_clinico/main.dart'; // Certifique-se de que este import está correto para o 'Routes.home'
+import 'package:sistema_clinico/shared/constants/constants.dart'; // Certifique-se de que ImageResourceEnum está definido aqui
 import 'package:dio/dio.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,14 +18,28 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  bool _showClearPasswordIcon = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordController.addListener(_updateClearPasswordIconVisibility);
+  }
+
   @override
   void dispose() {
+    _passwordController.removeListener(_updateClearPasswordIconVisibility);
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  // --- Lógica de Login ---
+  void _updateClearPasswordIconVisibility() {
+    setState(() {
+      _showClearPasswordIcon = _passwordController.text.isNotEmpty;
+    });
+  }
+
   void _login() async {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -47,8 +61,7 @@ class _LoginPageState extends State<LoginPage> {
       final String usernameRetornado = response['username'];
 
       prefs.setString("token", token);
-      prefs.setString(
-          "username", usernameRetornado); // Salva o username retornado
+      prefs.setString("username", usernameRetornado);
       prefs.setString("userType", userType);
 
       Navigator.pushReplacementNamed(context, Routes.home);
@@ -59,8 +72,8 @@ class _LoginPageState extends State<LoginPage> {
       } else if (e.toString().contains('403')) {
         errorMessage = 'Acesso negado. Verifique suas permissões.';
       } else if (e.toString().contains('Estrutura de dados inválida')) {
-        errorMessage = 'Erro na resposta da API: ' +
-            e.toString().replaceFirst('Exception: ', '');
+        errorMessage =
+            'Erro na resposta da API: ${e.toString().replaceFirst('Exception: ', '')}';
       } else if (e is DioException) {
         if (e.type == DioExceptionType.connectionError) {
           errorMessage =
@@ -118,21 +131,10 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Spacer(flex: 1),
-
                   Image.asset(
-                    ImageResourceEnum.icone.path,
-                    height: 120,
+                    ImageResourceEnum.logo.path,
+                    height: 100,
                   ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Inclusivamente',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: logoTextColor,
-                    ),
-                  ),
-
                   const SizedBox(height: 20),
 
                   // --- Card de Login ---
@@ -140,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 40.0),
                     child: Card(
                       color: cardBackgroundColor,
-                      elevation: 8,
+                      elevation: 4,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
@@ -186,16 +188,17 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   contentPadding: const EdgeInsets.symmetric(
                                       vertical: 15.0, horizontal: 15.0),
-                                  suffixIcon: IconButton(
-                                    icon: const Icon(Icons.close),
-                                    onPressed: () {
-                                      _passwordController
-                                          .clear(); // Limpa o campo de senha
-                                    },
-                                  ),
+                                  // Condicional para mostrar o ícone "X"
+                                  suffixIcon: _showClearPasswordIcon
+                                      ? IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            _passwordController.clear();
+                                          },
+                                        )
+                                      : null,
                                 ),
                                 validator: (value) {
-                                  // Adiciona validação
                                   if (value == null || value.isEmpty) {
                                     return 'Por favor, insira sua senha';
                                   }
@@ -206,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
 
                               // --- Texto "Esqueceu a senha?" ---
                               Align(
-                                alignment: Alignment.centerRight,
+                                alignment: Alignment.centerLeft,
                                 child: TextButton(
                                   onPressed: () {
                                     // TODO: Ação de "esqueceu a senha"
@@ -220,22 +223,19 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               const SizedBox(height: 20),
 
-                              // --- Botão Login (com CircularProgressIndicator) ---
                               _isLoading
                                   ? const CircularProgressIndicator()
                                   : ElevatedButton(
                                       onPressed:
                                           _login, // Chama a função de login
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: loginButtonColor,
-                                        minimumSize:
-                                            const Size(double.infinity, 50),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        ),
-                                        elevation: 5,
-                                      ),
+                                          backgroundColor: loginButtonColor,
+                                          minimumSize:
+                                              const Size(double.infinity, 50),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          )),
                                       child: const Text(
                                         'Login',
                                         style: TextStyle(
@@ -251,7 +251,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-
                   // --- ESTE SPACER PERMANECE PARA EMPURRAR O COPYRIGHT PARA BAIXO ---
                   const Spacer(flex: 2),
 
