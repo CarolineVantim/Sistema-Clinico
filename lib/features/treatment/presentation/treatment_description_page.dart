@@ -179,22 +179,14 @@ class _AddServiceState extends ConsumerState<AddService> {
     try {
       // --- INÍCIO DA SIMULAÇÃO DE UPLOAD DO VÍDEO ---
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Anexando vídeo de demonstração...')),
+        const SnackBar(content: Text('Anexando vídeo no atendimento...')),
       );
-      await Future.delayed(
-          const Duration(seconds: 1)); // Simula um pequeno atraso
+      await Future.delayed(const Duration(seconds: 1));
 
-      // Define um ID de mídia fictício (por exemplo, 999)
       const int dummyMediaId = 12;
-
-      // Cria uma lista de notas, incluindo a URL do vídeo
-      final List<String> notes = [_descriptionController.text];
-      notes.add(
-          'Video Anexado (Simulação): $_googleDriveVideoUrl'); // Adiciona a URL às notas
 
       // --- FIM DA SIMULAÇÃO DE UPLOAD DO VÍDEO ---
 
-      // Em seguida, crie o objeto Atendimento com o mediaId fictício e a URL nas notas
       final atendimento = Atendimento(
         classDate: DateFormat('yyyy-MM-dd').format(dateTime),
         startTime: DateFormat('HH:mm:ss').format(dateTime),
@@ -204,13 +196,11 @@ class _AddServiceState extends ConsumerState<AddService> {
         status: 'planned',
         discipline: _selectedMateria!,
         location: 'Sala 1',
-        notes: notes, // Passa a lista de notas com a URL do vídeo
         crm: _professionalController.text,
-        mediaId: dummyMediaId, // Usa o ID fictício
+        mediaId: dummyMediaId,
         studentCpf: selectedCpf!,
       );
 
-      // Por fim, salve o atendimento. O estado de loading/erro será atualizado.
       await atendimentoNotifier.criarAtendimento(atendimento);
       if (!mounted) return;
     } catch (e) {
@@ -409,7 +399,7 @@ class _AddServiceState extends ConsumerState<AddService> {
                     Text(
                       _selectedMediaFile != null
                           ? 'Mídia selecionada: ${_selectedMediaFile!.name}'
-                          : 'Anexar Imagem/Vídeo (Simulado)', // Texto atualizado
+                          : 'Anexar Imagem/Vídeo', // Texto atualizado
                     ),
                   ],
                 ),

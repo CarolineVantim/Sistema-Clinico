@@ -6,7 +6,6 @@ class Atendimento {
   final String status;
   final String discipline;
   final String location;
-  final List<String> notes;
   final String crm;
   final int
       mediaId; // Mantemos como 'int' se for sempre esperado um valor válido
@@ -20,9 +19,8 @@ class Atendimento {
     required this.status,
     required this.discipline,
     required this.location,
-    required this.notes,
     required this.crm,
-    required this.mediaId, // Continua requerido no construtor
+    required this.mediaId,
     required this.studentCpf,
   });
 
@@ -35,9 +33,8 @@ class Atendimento {
       "status": status,
       "discipline": discipline,
       "location": location,
-      "notes": notes,
       "professional": {"crm": crm},
-      "media": {"id": mediaId}, // Formato JSON esperado pelo backend
+      "media": {"id": mediaId},
       "student": {"cpf": studentCpf},
     };
   }
@@ -52,7 +49,6 @@ class Atendimento {
       status: json["status"],
       discipline: json["discipline"],
       location: json["location"],
-      notes: List<String>.from(json["notes"] ?? []),
       crm: json["professional"]["crm"],
       mediaId: json["media"] != null
           ? json["media"]["id"] as int
