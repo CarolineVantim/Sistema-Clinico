@@ -1,6 +1,9 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:sistema_clinico/services/api_service.dart';
+
+import '../../students/presentation/patients_profile.dart';
 
 class Patients extends StatefulWidget {
   const Patients({super.key});
@@ -89,39 +92,38 @@ class _PatientsState extends State<Patients> {
               itemCount: filteredPatients.length,
               itemBuilder: (context, index) {
                 final patient = filteredPatients[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
-                  child: Card(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                return Card(
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 16.0),
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: patient['studentImage'] != ""
+                          ? MemoryImage(base64Decode(patient['studentImage']))
+                          : null,
+                      child: patient['studentImage'] == ""
+                          ? const Icon(Icons.person, color: Colors.grey)
+                          : null,
                     ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: patient['studentImage'] != ""
-                            ? MemoryImage(base64Decode(patient['studentImage']))
-                            : null,
-                        child: patient['studentImage'] == ""
-                            ? const Icon(Icons.person, color: Colors.grey)
-                            : null,
-                      ),
-                      // title: Text(patient['name']!),
-                      // subtitle: Text(patient['age']!),
-                      // trailing: IconButton(
-                      //   icon: const Icon(Icons.notes),
-                      //   onPressed: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (context) => PatientsProfile(
-                      //           name: patient['name']!,
-                      //           avatar: patient['avatar'],
-                      //         ),
-                      //       ),
-                      //     );
-                      //   },
-                      // ),
+                    title: Text(patient['name']!),
+                    subtitle: Text('Nome completo'),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.notes),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PatientsProfile(
+                              name: patient['name']!,
+                              studentImage: patient['studentImage'],
+                              cpf: patient['cpf'],
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 );
