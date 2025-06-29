@@ -12,10 +12,11 @@ class ClassRecordsRepository {
   Future<List<ClassRecordsModel>> fetchClassRecordsByCpf(String cpf) async {
     try {
       final response = await dio.get(
-          '/api/class_records/find_class_by_student_cpf?page=0&studentCpf=$cpf');
-      return (response.data as List)
-          .map((record) => ClassRecordsModel.fromJson(record))
-          .toList();
+          '/class_records/find_class_by_student_cpf?page=0&studentCpf=$cpf');
+
+      return [
+        for (final json in response.data) ClassRecordsModel.fromJson(json)
+      ];
     } on DioException catch (e) {
       throw Exception(
           'Erro ao buscar registros de atendimento: ${e.response?.data ?? e.message}');

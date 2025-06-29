@@ -1,8 +1,9 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistema_clinico/features/treatment/presentation/service_detail_page.dart';
 import 'package:sistema_clinico/features/students/data/repositories/class_records_repository_impl.dart';
+import 'package:sistema_clinico/features/treatment/presentation/service_detail_page.dart';
 
 class PatientsProfile extends ConsumerWidget {
   final String name;
@@ -21,6 +22,9 @@ class PatientsProfile extends ConsumerWidget {
     final atendimentosAsync = ref.watch(atendimentosPorCpfProvider(cpf));
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(""),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -34,7 +38,8 @@ class PatientsProfile extends ConsumerWidget {
                           ? MemoryImage(base64Decode(
                               studentImage!)) // Tratando a imagem em base64
                           : null,
-                  backgroundColor: Colors.blue, // Caso não tenha imagem, não exibe nada
+                  backgroundColor:
+                      Colors.blue, // Caso não tenha imagem, não exibe nada
                   child: studentImage == null || studentImage!.isEmpty
                       ? Icon(
                           Icons.person, // Ícone padrão se não houver imagem

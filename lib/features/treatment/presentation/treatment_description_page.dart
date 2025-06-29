@@ -1,17 +1,17 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:sistema_clinico/shared/data/models/atendimento_model.dart';
 import 'package:sistema_clinico/shared/data/providers/atendimento_provider.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:sistema_clinico/shared/widgets/action_buttons.dart';
+import 'package:sistema_clinico/shared/widgets/custom_dropdown_field.dart';
 // Widgets
 import 'package:sistema_clinico/shared/widgets/custom_text_form_field.dart';
 import 'package:sistema_clinico/shared/widgets/date_time_picker_field.dart';
-import 'package:sistema_clinico/shared/widgets/custom_dropdown_field.dart';
-import 'package:sistema_clinico/shared/widgets/action_buttons.dart';
 
 class AddService extends ConsumerStatefulWidget {
   const AddService({super.key});
@@ -68,6 +68,7 @@ class _AddServiceState extends ConsumerState<AddService> {
 
   Future<void> _createLesson() async {
     if (!_formKey.currentState!.validate()) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Preencha todos os campos obrigatórios')),
       );
@@ -75,6 +76,7 @@ class _AddServiceState extends ConsumerState<AddService> {
     }
 
     if (selectedCpf == null) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Selecione um cliente válido')),
       );
@@ -82,6 +84,7 @@ class _AddServiceState extends ConsumerState<AddService> {
     }
 
     if (_selectedDate == null || _selectedTime == null) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Por favor, selecione a data e o horário.')),
@@ -116,6 +119,7 @@ class _AddServiceState extends ConsumerState<AddService> {
       await ref
           .read(atendimentoProvider.notifier)
           .criarAtendimento(atendimento);
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Atendimento criado com sucesso!')),
       );
@@ -317,7 +321,9 @@ class _AddServiceState extends ConsumerState<AddService> {
                 children: [
                   PrimaryButton(
                     text: 'Salvar',
-                    onPressed: _createLesson,
+                    onPressed: () async {
+                      await _createLesson();
+                    },
                     isLoading: asyncState is AsyncLoading,
                   ),
                   const SizedBox(width: 16),
