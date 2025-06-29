@@ -1,11 +1,11 @@
 enum ImageResourceEnum {
-  logo('assets/images/home/logo_inclusivamente.svg'),
+  logo('assets/images/home/logo_inclusivamente.png'),
   profissional('assets/images/home/psicologo.svg'),
   familia('assets/images/home/pais.svg'),
   notFound('assets/images/shared/not_found.svg'),
-  autism('assets/images/home/autism.svg'),
+  autism('assets/images/home/checklist.svg'),
   calendar('assets/images/home/calendar.svg'),
-  children('assets/images/home/children.svg'),
+  children('assets/images/home/clients.svg'),
   source('assets/images/home/source.svg'),
   icone('assets/images/home/Icone.png'),
   base64Avatar(kBase64);
