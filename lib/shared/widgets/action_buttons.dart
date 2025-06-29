@@ -1,33 +1,38 @@
-// lib/shared/widgets/action_buttons.dart
 import 'package:flutter/material.dart';
 
 class PrimaryButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed; // <<< AQUI: precisa ser nullable
   final bool isLoading;
+  final Color? foregroundColor;
+  final Color? backgroundColor;
 
   const PrimaryButton({
     super.key,
     required this.text,
-    required this.onPressed,
+    required this.onPressed, // Mantido como required, mas o tipo é nullable
     this.isLoading = false,
+    this.foregroundColor,
+    this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: FilledButton(
-        onPressed: isLoading ? null : onPressed,
+        onPressed: isLoading ? null : onPressed, // Passa null para desabilitar
         style: FilledButton.styleFrom(
           minimumSize: const Size.fromHeight(48),
+          foregroundColor: foregroundColor,
+          backgroundColor: backgroundColor,
         ),
         child: isLoading
             ? const SizedBox(
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(
-                  strokeWidth: 2,
                   color: Colors.white,
+                  strokeWidth: 2,
                 ),
               )
             : Text(text),
@@ -38,14 +43,14 @@ class PrimaryButton extends StatelessWidget {
 
 class SecondaryButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed; // <<< AQUI: precisa ser nullable
   final Color? foregroundColor;
   final Color? borderColor;
 
   const SecondaryButton({
     super.key,
     required this.text,
-    required this.onPressed,
+    required this.onPressed, // Mantido como required, mas o tipo é nullable
     this.foregroundColor,
     this.borderColor,
   });
@@ -56,10 +61,9 @@ class SecondaryButton extends StatelessWidget {
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
+          minimumSize: const Size.fromHeight(48),
           foregroundColor: foregroundColor,
-          side:
-              BorderSide(color: borderColor ?? Theme.of(context).primaryColor),
-          minimumSize: const Size.fromHeight(48), // Altura fixa
+          side: borderColor != null ? BorderSide(color: borderColor!) : null,
         ),
         child: Text(text),
       ),
