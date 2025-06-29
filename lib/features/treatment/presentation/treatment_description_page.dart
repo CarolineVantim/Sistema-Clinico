@@ -9,6 +9,7 @@ import 'package:sistema_clinico/shared/data/models/atendimento_model.dart';
 import 'package:sistema_clinico/shared/data/providers/atendimento_provider.dart';
 import 'package:sistema_clinico/shared/widgets/action_buttons.dart';
 import 'package:sistema_clinico/shared/widgets/custom_dropdown_field.dart';
+import 'package:image_picker/image_picker.dart';
 // Widgets
 import 'package:sistema_clinico/shared/widgets/custom_text_form_field.dart';
 import 'package:sistema_clinico/shared/widgets/date_time_picker_field.dart';
@@ -36,11 +37,44 @@ class _AddServiceState extends ConsumerState<AddService> {
   final List<String> materias = [
     'Fisioterapia',
     'Nutricionista',
-    'Fonoaudiologa'
+    'Fonoaudiologa',
+    'Psicologia',
+    'Enfermagem'
   ];
   String? _selectedMateria;
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
+  XFile? _selectedMediaFile; // Mantido para futura implementação real de upload
+  // int? _uploadedMediaId; // Não será mais usado diretamente para o ID fictício
+
+  // URL do vídeo do Google Drive que será sempre "anexado"
+  static const String _googleDriveVideoUrl =
+      'https://drive.google.com/uc?export=download&id=1zapMFinqLazui8QiXtlW1Gaj65JVclna';
+
+  @override
+  void initState() {
+    super.initState();
+
+    ref.listenManual(atendimentoProvider, (previousState, newState) {
+      newState.whenOrNull(
+        data: (data) {
+          if (previousState?.isLoading == true) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Atendimento salvo com sucesso!')),
+            );
+            Navigator.pop(context);
+          }
+        },
+        error: (error, stackTrace) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content:
+                    Text('Erro ao salvar atendimento: ${error.toString()}')),
+          );
+        },
+      );
+    });
+  }
 
   @override
   void dispose() {
@@ -63,7 +97,47 @@ class _AddServiceState extends ConsumerState<AddService> {
     _selectedDate = null;
     _selectedTime = null;
     _clientSuggestions = [];
+    _selectedMediaFile = null; // Limpa o arquivo de mídia selecionado
+    // _uploadedMediaId = null; // Não é mais necessário limpar
     setState(() {});
+  }
+
+  // Mantido para permitir que o usuário selecione um arquivo,
+  // mas o upload real e o mediaId serão simulados em _createLesson
+  Future<void> _pickMedia() async {
+    final ImagePicker picker = ImagePicker();
+
+    final ImageSource? source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Galeria'),
+                onTap: () => Navigator.pop(context, ImageSource.gallery),
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Câmera'),
+                onTap: () => Navigator.pop(context, ImageSource.camera),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (source != null) {
+      final XFile? pickedFile =
+          await picker.pickMedia(); // Permite imagem ou vídeo
+      setState(() {
+        _selectedMediaFile = pickedFile;
+        // _uploadedMediaId = null; // Não é mais necessário resetar aqui
+      });
+    }
   }
 
   Future<void> _createLesson() async {
@@ -100,33 +174,39 @@ class _AddServiceState extends ConsumerState<AddService> {
       _selectedTime!.minute,
     );
 
-    final atendimento = Atendimento(
-      classDate: DateFormat('yyyy-MM-dd').format(dateTime),
-      startTime: DateFormat('HH:mm:ss').format(dateTime),
-      endTime:
-          DateFormat('HH:mm:ss').format(dateTime.add(const Duration(hours: 1))),
-      subject: _titleController.text,
-      status: 'planned',
-      discipline: _selectedMateria!,
-      location: 'Sala 1',
-      notes: [_descriptionController.text],
-      crm: _professionalController.text,
-      mediaId: 0,
-      studentCpf: selectedCpf!,
-    );
+    final atendimentoNotifier = ref.read(atendimentoProvider.notifier);
 
     try {
-      await ref
-          .read(atendimentoProvider.notifier)
-          .criarAtendimento(atendimento);
-      if (!mounted) return;
+      // --- INÍCIO DA SIMULAÇÃO DE UPLOAD DO VÍDEO ---
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Atendimento criado com sucesso!')),
+        const SnackBar(content: Text('Anexando vídeo no atendimento...')),
       );
-      _resetForm();
+      await Future.delayed(const Duration(seconds: 1));
+
+      const int dummyMediaId = 12;
+
+      // --- FIM DA SIMULAÇÃO DE UPLOAD DO VÍDEO ---
+
+      final atendimento = Atendimento(
+        classDate: DateFormat('yyyy-MM-dd').format(dateTime),
+        startTime: DateFormat('HH:mm:ss').format(dateTime),
+        endTime: DateFormat('HH:mm:ss')
+            .format(dateTime.add(const Duration(hours: 1))),
+        subject: _titleController.text,
+        status: 'planned',
+        discipline: _selectedMateria!,
+        location: 'Sala 1',
+        crm: _professionalController.text,
+        mediaId: dummyMediaId,
+        studentCpf: selectedCpf!,
+      );
+
+      await atendimentoNotifier.criarAtendimento(atendimento);
+      if (!mounted) return;
     } catch (e) {
+      print('Erro no fluxo de salvar atendimento/mídia (simulação): $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao criar atendimento: $e')),
+        SnackBar(content: Text('Erro ao salvar atendimento: ${e.toString()}')),
       );
     }
   }
@@ -305,25 +385,46 @@ class _AddServiceState extends ConsumerState<AddService> {
                 maxLines: 4,
               ),
               const SizedBox(height: 24),
+              // Botão de upload de mídia (ainda permite seleção, mas o upload é simulado)
               FilledButton.tonal(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Funcionalidade em breve!')),
-                  );
-                },
+                onPressed: _pickMedia, // Chama a função de seleção de mídia
                 style: FilledButton.styleFrom(
                   minimumSize: const Size.fromHeight(48),
                 ),
-                child: const Text("Anexar Imagem/Vídeo"),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.attach_file),
+                    const SizedBox(width: 8),
+                    Text(
+                      _selectedMediaFile != null
+                          ? 'Mídia selecionada: ${_selectedMediaFile!.name}'
+                          : 'Anexar Imagem/Vídeo', // Texto atualizado
+                    ),
+                  ],
+                ),
               ),
+              if (_selectedMediaFile != null)
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _selectedMediaFile = null;
+                    });
+                  },
+                  child: const Text('Limpar seleção de mídia'),
+                ),
               const SizedBox(height: 24),
               Row(
                 children: [
                   PrimaryButton(
                     text: 'Salvar',
-                    onPressed: () async {
-                      await _createLesson();
-                    },
+                    onPressed: asyncState is AsyncLoading
+                        ? null
+                        : () async {
+                            await () async {
+                              await _createLesson();
+                            }();
+                          },
                     isLoading: asyncState is AsyncLoading,
                   ),
                   const SizedBox(width: 16),
