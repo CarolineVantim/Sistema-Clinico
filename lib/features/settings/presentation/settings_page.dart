@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:sistema_clinico/app.dart';
+import 'package:sistema_clinico/shared/constants/constants.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -16,21 +18,32 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       appBar: AppBar(
         title: const Text('Configurações'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Troca de tema',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            SvgPicture.asset(
+              ImageResourceEnum.building.path,
+              height: 200,
+              width: 200,
             ),
-            const SizedBox(width: 10),
-            Switch(
-              value: ref.watch(isDarkTheme),
-              onChanged: (value) {
-                ref.read(isDarkTheme.notifier).update((state) => !value);
-              },
+            const SizedBox(height: 20),
+            const Text(
+              'Esta tela está em construção!',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const Text(
+              'Em breve teremos mais novidades aqui.',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
